@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{common/layout/template :: layout(~{::title},~{::body/content()})}">
+
+<head>
+	<title th:text="#{disp.equipmentlist}"></title>
+</head>
+
+<body>
+	<div class="container" style="max-width: 96%;">
+
+		<h1 class="title" th:text="#{disp.equipmentlist}"></h1>
+
+		<!--各種ボタン-->
+		<div class="btndiv">
+			<form method="get" th:action="|@{/Equipment/EquipmentMaintenance/insert/__${shipInfo.fShipno}__}|">
+				<button type="submit" class="btn btn-save btn-icon">
+					<i class="bi bi-file-earmark-plus"></i>[[#{button.registernew}]]
+				</button>
+			</form>
+			<form method="post" th:action="@{/Ship/ShipSearch/index}">
+				<button type="submit" class="btn btn-primary btn-icon">
+					<i class="bi bi-arrow-counterclockwise"></i>[[#{button.return}]]
+				</button>
+			</form>
+		</div>
+
+		<div class="table-responsive">
+
+			<table class="mainTable mainTable-container">
+				<tr>
+					<th th:text="#{thead.Fshipno}"></th>
+					<td th:text="${shipInfo.fShipno}"></td>
+					<th th:text="#{thead.imono}"></th>
+					<td th:text="${shipInfo.imono}"></td>
+					<th th:text="#{thead.shipnumber}"></th>
+					<td th:text="${shipInfo.shipnumber}"></td>
+				</tr>
+				<tr>
+					<th th:text="#{thead.shiptype}"></th>
+					<td th:text="${shipInfo.shiptype}"></td>
+					<th th:text="#{thead.shipnationality}"></th>
+					<td th:text="${shipInfo.shipnationality}"></td>
+					<th th:text="#{thead.shipspecies}"></th>
+					<td th:text="${shipInfo.shipspecies}"></td>
+				</tr>
+				<tr>
+					<th th:text="#{thead.shipname}"></th>
+					<td th:text="${shipInfo.shipnamejp}"></td>
+					<th th:text="#{thead.series}"></th>
+					<td th:text="${shipInfo.series}"></td>
+					<th th:text="#{thead.grosstonnage}"></th>
+					<td th:text="${shipInfo.grosstonnage}"></td>
+				</tr>
+				<tr>
+					<th th:text="#{thead.shipclass}"></th>
+					<td th:text="${shipInfo.shipclass}"></td>
+					<th th:text="#{thead.shipyard}"></th>
+					<td th:text="${shipInfo.shipyard}" colspan="3"></td>
+				</tr>
+				<tr>
+					<th th:text="#{thead.builddate}"></th>
+					<td th:text="${shipInfo.builddate}"></td>
+					<th th:text="#{thead.customer}"></th>
+					<td th:text="${shipInfo.customer}" colspan="3"></td>
+				</tr>
+			</table>
+		</div>
+
+		<div class="table-responsive">
+			<table class="subTable subTable-container">
+				<tr class="textcenter">
+					<th th:text="#{thead.status}"></th>
+					<th th:text="#{thead.equipment}"></th>
+					<th th:text="#{thead.model}"></th>
+					<th th:text="#{thead.identification}"></th>
+					<th th:text="#{thead.machinenumber}"></th>
+					<th th:text="#{thead.shippingdate}"></th>
+					<th th:text="#{thead.equipmentdate}"></th>
+					<th th:text="#{thead.salesjurisdict}"></th>
+					<th th:text="#{thead.shipyardwarrantdeadline}"></th>
+					<th th:text="#{thead.fullwarrantdeadline}"></th>
+					<th th:text="#{thead.remarks}"></th>
+				</tr>
+				<tr th:each="equipmentInfo : ${equipmentInfoList}">
+					<td th:text="${equipmentInfo.status}" class="status"></td>
+					<td class="equipmentIcon">
+						<a th:href="|@{/Equipment/EquipmentMaintenance/index/__${equipmentInfo.equipmentid}__}|">
+							<i class="bi bi-tools width"></i>
+						</a>
+					</td>
+					<td th:text="${equipmentInfo.model}"></td>
+					<td th:text="${equipmentInfo.identification}"></td>
+					<td th:text="${equipmentInfo.machinenum}"></td>
+					<td th:text="${equipmentInfo.shippingdate}"></td>
+					<td th:text="${equipmentInfo.equipmentdate}"></td>
+					<td th:text="${equipmentInfo.salesjurisdict}"></td>
+					<td th:text="${equipmentInfo.shipyardwarrantydate}"></td>
+					<td th:text="${equipmentInfo.warrantydate}"></td>
+					<td th:text="${equipmentInfo.remarks}"></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+
+	<!-- 使うかどうか保留
+	<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+	<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+	<script th:inline="javascript">
+		// 折り返し表示機能
+		$(function () {
+			const tdList = document.querySelectorAll(".mainTable td");
+		
+			tdList.forEach((td) => {
+				// tdタグの中の文字を取得
+				let text = td.innerText;
+		
+				// 25文字ごとにbrタグを挿入
+				let newText = "";
+				for (let i = 0; i < text.length; i += 50) {
+					newText += text.substr(i, 50) + "<br>";
+				}
+		
+				// tdタグ内に新しい文字列を出力
+				td.innerHTML = newText;
+			});
+		});
+	</script>
+	-->
+</body>
+
+</html>

@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{common/layout/template :: layout(~{::title},~{::body/content()})}">
+
+<head>
+	<title th:text="#{disp.shipmaintenance}"></title>
+</head>
+
+<body>
+
+	<div class="container">
+
+		<h1 class="title" th:text="#{disp.shipmaintenance}"></h1>
+		<form method="post" name="shipMaintenanceForm" th:object="${shipMaintenanceForm}">
+			<div th:if="${errorMessage != null}" th:utext="${errorMessage}" class="errorMessage"></div>
+
+			<!-- 各種ボタン -->
+			<div class="btndiv">
+				<!--保存-->
+				<button type="button" id="update" onclick="updateShipInfo()" class="btn btn-save btn-icon"
+					th:formaction="|@{/Ship/ShipMaintenance/update/__${shipMaintenanceInfo.fshipno}__}|">
+					<i class="bi bi-save"></i>[[#{button.save}]]
+				</button>
+
+				<!--図面フォルダパスコピー-->
+				<button type="button" id="pathCopy" onclick="folderPathCopy()" class="btn btn-secondary btn-icon"
+					style="width: 190px;" disabled>
+					<i class="bi bi-clipboard"></i>[[#{button.drawingfolderpathcopy}]]
+				</button>
+
+				<!--装備画面へ-->
+				<button type="button" id="toequip" onclick="toequipment()" class="btn btn-secondary btn-icon"
+					th:formaction="|@{/Equipment/EquipmentList/index/__${shipMaintenanceInfo.fshipno}__}|">
+					<i class="bi bi-arrow-right-circle"></i>[[#{button.toequipment}]]</button>
+
+				<!--削除-->
+				<button type="button" id="delete" class="btn btn-delete btn-icon" onclick="deleteShipInfo()"
+					th:formaction="|@{/Ship/ShipMaintenance/delete/__${shipMaintenanceInfo.fshipno}__}|">
+					<i class="bi bi-trash3"></i>[[#{button.delete}]]</button>
+
+				<!--戻る-->
+				<button type="button" id="return" onclick="toSearch()" class="btn btn-primary btn-icon"
+					th:formaction="@{/Ship/ShipSearch/index}">
+					<i class="bi bi-arrow-counterclockwise"></i>[[#{button.return}]]
+				</button>
+			</div>
+
+			<!--	タブ  -->
+			<ul class="nav nav-tabs">
+				<li class="nav-item">
+					<button class="nav-link active" data-bs-toggle="tab" data-bs-target="#basicinformation"
+						type="button" th:text="#{label.basicinformation}"></button>
+				</li>
+				<li class="nav-item">
+					<button class="nav-link" data-bs-toggle="tab" data-bs-target="#customerinformation" type="button"
+						th:text="#{label.customerinformation}"></button>
+				</li>
+				<li class="nav-item">
+					<button class="nav-link" data-bs-toggle="tab" data-bs-target="#warrantyandincidental" type="button"
+						th:text="#{label.warrantyandincidental}"></button>
+				</li>
+				<li class="nav-item">
+					<button class="nav-link" data-bs-toggle="tab" data-bs-target="#rms" type="button"
+						th:text="#{label.rms}"></button>
+				</li>
+			</ul>
+
+			<!--  タブ  -->
+			<div class="tab-content">
+				<!--基本情報タブ-->
+				<div id="basicinformation" class="tab-pane active">
+					<table class="mainTable mainTable-container">
+						<tr align="left">
+							<th colspan="7"> <i class="bi bi-info-circle"></i> [[#{thead.maininformation}]]</th>
+						</tr>
+						<tr>
+							<th th:text="#{thead.Fshipno}" colspan="2"></th>
+							<td colspan="5" style="background-color:lightgray;" id="fShipno">
+								<input type="text" class="form-control-plaintext" name="fshipno"
+									th:value="${shipMaintenanceInfo.fshipno}" readonly>
+							</td>
+						</tr>
+						<tr>
+							<th th:text="#{thead.status}" colspan="2"></th>
+							<td style="background-color:lightgray; border-right: none;">
+								<input type="text" class="form-control-plaintext" name="statusmessage"
+									th:value="${shipMaintenanceInfo.statusmessage}" style="color: red;" readonly>
+							</td>
+							<td align="center">
+								<th:block th:if="${shipMaintenanceInfo.status == '1'}">
+									<input class="form-check-input" type="checkbox" name="status" value="9" disabled />
+									[[#{label.caution}]]
+								</th:block>
+								<th:block th:if="${shipMaintenanceInfo.status != '1'}">
+									<input class="form-check-input" type="checkbox" name="status" value="9"
+										th:checked="${shipMaintenanceInfo.status == '9'}" /> [[#{label.caution}]]
+								</th:block>
+							</td>
+
+							<th th:text="#{thead.projectno}" colspan="2"></th>
+							<td style="background-color:lightgray;" colspan="2">
+								<input type="text" class="form-control-plaintext" name="projectno"
+									th:value="${shipMaintenanceInfo.projectno}" readonly>
+							</td>
+						</tr>
+
+						<tr>
+							<th th:text="#{thead.smskeyno}" colspan="2"></th>
+							<td style="background-color:lightgray;" colspan="2">
+								<input type="text" class="form-control-plaintext" name="smskeyno"
+									th:value="${shipMaintenanceInfo.smskeyno}" readonly>
+							</td>
+
+							<th th:text="#{thead.torishinno}" colspan="2"></th>
+							<td style="background-color:lightgray;" colspan="2">
+								<input type="text" class="form-control-plaintext" name="torishinno"
+									th:value="${shipMaintenanceInfo.torishinno}" readonly>
+							</td>
+						</tr>
+
+						<tr>
+							<th th:text="#{thead.remarks}" colspan="2"></th>
+							<td colspan="5"><textarea class="form-control" name="remarks"
+									maxlength="200">[[${shipMaintenanceInfo.remarks}]]</textarea>
+							</td>
+						</tr>
+					</table>
+
+					<table class="subTable subTable-container">
+						<tr>
+							<th colspan="4"> <i class="bi bi-info-circle"></i> [[#{thead.shipinformation}]]</th>
+						</tr>
+						<tr>
+							<th th:text="#{thead.imono}"></th>
+							<td><input type="text" class="form-control" name="imoNo" maxlength="50"
+									th:value="${shipMaintenanceInfo.imoNo}">
+							</td>
+
+							<th th:text="#{thead.shipstatus}"></th>
+							<td style="background-color:lightgray;">
+								<input type="text" class="form-control-plaintext" name="shipstatus"
+									th:value="${shipMaintenanceInfo.shipstatus}" readonly>
+							</td>
+						</tr>
+
+						<tr>
+							<th>[[#{thead.shipyard}]]<span style="color: red">*</span></th>
+							<td>
+								<input type="text" id="shipyardSuggest" class="form-control shipyard" name="shipyard"
+									onchange="shipyardChange(this)" th:value="${shipMaintenanceInfo.shipyard}">
+							</td>
+							<th th:text="#{thead.shipyardseaweb}"></th>
+							<td style="background-color:lightgray;">
+								<input type="text" class="form-control-plaintext" name="shipyardnameen"
+									th:value="${shipMaintenanceInfo.shipyardnameen}" readonly>
+							</td>
+						</tr>
+
+						<tr>
+							<th>[[#{thead.shipnumber}]]<span style="color: red">*</span></th>
+							<td><input type="text" class="form-control shipnumber" name="shipNumber" maxlength="50"
+									th:value="${shipMaintenanceInfo.shipNumber}">
+							</td>
+
+							<th th:text="#{thead.shiptype}"></th>
+							<td>
+								<select class="form-select" name="shipType">
+									<option></option>
+									<option value="1" th:selected="${shipMaintenanceInfo.shipType == '1'}">商船
+									</option>
+									<option value="2" th:selected="${shipMaintenanceInfo.shipType == '2'}">官公庁
+									</option>
+									<option value="3" th:selected="${shipMaintenanceInfo.shipType == '3'}">保証カード
+									</option>
+									<option value="4" th:selected="${shipMaintenanceInfo.shipType == '4'}">漁船
+									</option>
+									<option value="5" th:selected="${shipMaintenanceInfo.shipType == '5'}">プレジャー
+									</option>
+									<option value="6" th:selected="${shipMaintenanceInfo.shipType == '6'}">無線・陸上局
+								</select>
+							</td>
+						</tr>
+
+						<tr>
+							<th th:text="#{thead.shipnamejp}"></th>
+							<td><input type="text" class="form-control" name="shipNameJP" maxlength="100"
+									th:value="${shipMaintenanceInfo.shipNameJP}">
+							</td>
+
+							<th th:text="#{thead.series}"></th>
+							<td><input type="text" class="form-control" name="shipSeries" maxlength="50"
+									th:value="${shipMaintenanceInfo.shipSeries}">
+							</td>
+						</tr>
+
+						<tr>
+							<th th:text="#{thead.shipnameen}"></th>
+							<td><input type="text" class="form-control" name="shipnameen" maxlength="100"
+									th:value="${shipMaintenanceInfo.shipnameen}">
+							</td>
+
+							<th th:text="#{thead.shipnameen2}"></th>
+							<td style="background-color:lightgray;">
+								<input type="text" class="form-control-plaintext" name="shipnameen2"
+									th:value="${shipMaintenanceInfo.shipnameen2}" readonly>
+							</td>
+						</tr>
+
+						<tr>
+							<th th:text="#{label.shipspecies}"></th>
+							<td><input type="text" class="form-control" id="shipspeciesSuggest" name="shipSpecies"
+									onchange="shipspeciesChange(this)" th:value="${shipMaintenanceInfo.shipSpecies}">
+							</td>
+							<th th:text="#{thead.shipspeciesseaweb}"></th>
+							<td style="background-color:lightgray;">
+								<input type="text" class="form-control-plaintext" name="ev_shipSpeciesnamejp"
+									th:value="${shipMaintenanceInfo.ev_shipSpeciesnamejp}" readonly>
+							</td>
+						</tr>
+
+						<tr>
+							<th th:text="#{thead.shipclass}"></th>
+							<td colspan="4">
+								<input type="text" class="form-control" id="shipclassSuggest" name="shipClass"
+									onchange="shipclassChange(this)" maxlength="30"
+									th:value="${shipMaintenanceInfo.shipClass}">
+							</td>
+						</tr>
+						<tr>
+							<th th:text="#{thead.shipclassf}"></th>
+							<td>
+								<textarea class="form-control" name="shipclassf"
+									maxlength="500">[[${shipMaintenanceInfo.shipclassf}]]</textarea>
+							</td>
+							<th th:text="#{thead.shipclassm}"></th>
+							<td>
+								<textarea class="form-control" name="shipclassm"
+									maxlength="150">[[${shipMaintenanceInfo.shipclassm}]]</textarea>
+							</td>
+						</tr>
+
+						<tr>
+							<th th:text="#{thead.shipnationality}"></th>
+							<td><input type="text" class="form-control" id="countrySuggest" name="shipNationality"
+									onchange="countryChange(this)" th:value="${shipMaintenanceInfo.shipNationality}">
+							</td>
+
+							<th th:text="#{thead.grosstonnage}"></th>
+							<td><input type="text" class="form-control" oninput="validateNumberInput(this);"
+									name="grosstonnage" maxlength="9" th:value="${shipMaintenanceInfo.grosstonnage}">
+							</td>
+						</tr>
+
+						<tr>
+							<th th:text="#{thead.builddate}"></th>
+							<td><input type="date" max="9999-12-31" class="form-control" name="builddate"
+									th:value="${shipMaintenanceInfo.builddate}">
+							</td>
+
+							<th th:text="#{thead.registrationno}"></th>
+							<td><input type="text" class="form-control" name="registrationno" maxlength="10"
+									th:value="${shipMaintenanceInfo.registrationno}">
+							</td>
+						</tr>
+
+						<tr>
+							<th th:text="#{thead.fishingregistrationno}"></th>
+							<td>
+								<input type="text" class="form-control" name="fishingregistrationno" maxlength="10"
+									th:value="${shipMaintenanceInfo.fishingregistrationno}">
+							</td>
+
+							<th th:text="#{thead.licenseno}"></th>
+							<td><input type="text" class="form-control" name="licenseno" maxlength="20"
+									th:value="${shipMaintenanceInfo.licenseno}">
+							</td>
+						</tr>
+
+						<tr>
+							<th th:text="#{thead.teu}"></th>
+							<td><input type="text" class="form-control" name="teu" maxlength="10"
+									th:value="${shipMaintenanceInfo.teu}">
+							</td>
+
+							<th th:text="#{thead.mainpowersupply}"></th>
+							<td><input type="text" class="form-control" name="mainpowersupply" maxlength="10"
+									th:value="${shipMaintenanceInfo.mainpowersupply}">
+							</td>
+						</tr>
+					</table>
+				</div>
+
+				<!--顧客情報タブ-->
+				<div id="customerinformation" class="tab-pane">
+					<table class="subTable subTable-container">
+						<tr>
+							<th th:text="#{thead.customer}"></th>
+							<td colspan="5"><input type="text" class="form-control" id="customerSuggest"
+									onchange="customerChange(this)" name="customer"
+									th:value="${shipMaintenanceInfo.customer}"></td>
+						</tr>
+						<tr>
+							<th th:text="#{thead.shipmanegementoffice}"></th>
+							<td colspan="5"><input type="text" class="form-control" id="managementofficeSuggest"
+									onchange="customerChange(this)" name="managementoffice"
+									th:value="${shipMaintenanceInfo.managementoffice}"></td>
+						</tr>
+						<tr>
+							<th th:text="#{thead.shipowner}"></th>
+							<td colspan="5"><input type="text" class="form-control" id="contactSuggest" name="contact"
+									onchange="customerChange(this)" th:value="${shipMaintenanceInfo.contact}">
+							</td>
+						</tr>
+						<tr>
+							<th th:text="#{thead.group}"></th>
+							<td colspan="1"><input type="text" class="form-control" id="groupSuggest" name="group"
+									onchange="groupChange(this)" th:value="${shipMaintenanceInfo.group}">
+							</td>
+
+							<th th:text="#{thead.salesjurisdictionsms}"></th>
+							<td colspan="2"><input type="text" class="form-control" name="furunorescompany"
+									maxlength="60" th:value="${shipMaintenanceInfo.furunorescompany}">
+							</td>
+						</tr>
+
+						<tr>
+							<th colspan="2" th:text="#{thead.ownerinfo}" style="text-align: left;"></th>
+							<th colspan="1" th:text="#{thead.lastupdate}"></th>
+							<th colspan="2" th:text="#{thead.beforeowner}"></th>
+						</tr>
+						<tr>
+							<th th:text="#{thead.groupbeneficialowner}"></th>
+							<td><input type="text" class="form-control" name="groupbeneficialowner" maxlength="200"
+									th:value="${shipMaintenanceInfo.groupbeneficialowner}">
+							</td>
+							<td style="background-color:lightgray;">
+								<input type="text" class="form-control-plaintext" name="lastupd_info[0]"
+									th:value="${shipMaintenanceInfo.lastupd_info[0]}" readonly>
+							</td>
+							<td style="background-color:lightgray;">
+								<input type="text" class="form-control-plaintext" name="groupbeneficialownerBk"
+									th:value="${shipMaintenanceInfo.groupbeneficialownerBk}" readonly>
+							</td>
+						</tr>
+						<tr>
+							<th th:text="#{thead.shipmanager}"></th>
+							<td><input type="text" class="form-control" name="shipmanager" maxlength="200"
+									th:value="${shipMaintenanceInfo.shipmanager}">
+							</td>
+
+							<td style="background-color:lightgray;">
+								<input type="text" class="form-control-plaintext" name="lastupd_info[1]"
+									th:value="${shipMaintenanceInfo.lastupd_info[1]}" readonly>
+							</td>
+							<td style="background-color:lightgray;">
+								<input type="text" class="form-control-plaintext" name="shipmanagerBk"
+									th:value="${shipMaintenanceInfo.shipmanagerBk}" readonly>
+							</td>
+						</tr>
+
+						<tr>
+							<th th:text="#{thead.registeredowner}"></th>
+							<td><input type="text" class="form-control" name="registeredowner" maxlength="200"
+									th:value="${shipMaintenanceInfo.registeredowner}">
+							</td>
+
+							<td style="background-color:lightgray;">
+								<input type="text" class="form-control-plaintext" name="lastupd_info[2]"
+									th:value="${shipMaintenanceInfo.lastupd_info[2]}" readonly>
+							</td>
+							<td style="background-color:lightgray;">
+								<input type="text" class="form-control-plaintext" name="registeredownerBk"
+									th:value="${shipMaintenanceInfo.registeredownerBk}" readonly>
+							</td>
+						</tr>
+						<tr>
+							<th th:text="#{thead.doccompany}"></th>
+							<td><input type="text" class="form-control" name="doccompany" maxlength="200"
+									th:value="${shipMaintenanceInfo.doccompany}">
+							</td>
+
+							<td style="background-color:lightgray;">
+								<input type="text" class="form-control-plaintext" name="lastupd_info[3]"
+									th:value="${shipMaintenanceInfo.lastupd_info[3]}" readonly>
+							</td>
+							<td style="background-color:lightgray;">
+								<input type="text" class="form-control-plaintext" name="doccompanyBk"
+									th:value="${shipMaintenanceInfo.doccompanyBk}" readonly>
+							</td>
+						</tr>
+						<tr>
+							<th th:text="#{thead.technicalmanager}"></th>
+							<td><input type="text" class="form-control" name="technicalmanager" maxlength="200"
+									th:value="${shipMaintenanceInfo.technicalmanager}">
+							</td>
+
+							<td style="background-color:lightgray;">
+								<input type="text" class="form-control-plaintext" name="lastupd_info[4]"
+									th:value="${shipMaintenanceInfo.lastupd_info[4]}" readonly>
+							</td>
+							<td style="background-color:lightgray;">
+								<input type="text" class="form-control-plaintext" name="technicalmanagerBk"
+									th:value="${shipMaintenanceInfo.technicalmanagerBk}" readonly>
+							</td>
+						</tr>
+						<tr>
+							<th th:text="#{thead.operator}"></th>
+							<td><input type="text" class="form-control" name="operator" maxlength="200"
+									th:value="${shipMaintenanceInfo.operator}">
+							</td>
+
+							<td style="background-color:lightgray;">
+								<input type="text" class="form-control-plaintext" name="lastupd_info[5]"
+									th:value="${shipMaintenanceInfo.lastupd_info[5]}" readonly>
+							</td>
+							<td style="background-color:lightgray;">
+								<input type="text" class="form-control-plaintext" name="operatorBk"
+									th:value="${shipMaintenanceInfo.operatorBk}" readonly>
+							</td>
+						</tr>
+
+						<tr>
+							<th colspan="2" th:text="#{thead.shipOwnerAndManegementOffice}"></th>
+							<th colspan="3" th:text="#{thead.furunomanagementcompany}" style="text-align: left;"></th>
+						</tr>
+						<tr>
+							<th th:text="#{thead.shipowner}"></th>
+							<td>
+								<select class="form-select" name="ownercustomerkbn" id="ownercustomerSelect">
+									<option></option>
+									<option value="1" th:selected="${shipMaintenanceInfo.ownercustomerkbn == '1'}">
+										GroupBeneficialOwner</option>
+									<option value="2" th:selected="${shipMaintenanceInfo.ownercustomerkbn == '2'}">
+										ShipManager</option>
+									<option value="3" th:selected="${shipMaintenanceInfo.ownercustomerkbn == '3'}">
+										RegisteredOwner</option>
+									<option value="4" th:selected="${shipMaintenanceInfo.ownercustomerkbn == '4'}">
+										DOCCompany</option>
+									<option value="5" th:selected="${shipMaintenanceInfo.ownercustomerkbn == '5'}">
+										TechnicalManager</option>
+									<option value="6" th:selected="${shipMaintenanceInfo.ownercustomerkbn == '6'}">
+										Operator</option>
+								</select>
+							</td>
+							<td colspan="4"> <input type="text" class="form-control" name="ownercustomerfrescomp"
+									maxlength="10" th:value="${shipMaintenanceInfo.ownercustomerfrescomp}">
+							</td>
+						</tr>
+
+						<tr>
+							<th th:text="#{thead.managementoffice}"></th>
+							<td>
+								<select class="form-select" name="ownermanagementkbn" id="ownermanagementSelect">
+									<option></option>
+									<option value="1" th:selected="${shipMaintenanceInfo.ownermanagementkbn == '1'}">
+										GroupBeneficialOwner</option>
+									<option value="2" th:selected="${shipMaintenanceInfo.ownermanagementkbn == '2'}">
+										ShipManager</option>
+									<option value="3" th:selected="${shipMaintenanceInfo.ownermanagementkbn == '3'}">
+										RegisteredOwner</option>
+									<option value="4" th:selected="${shipMaintenanceInfo.ownermanagementkbn == '4'}">
+										DOCCompany</option>
+									<option value="5" th:selected="${shipMaintenanceInfo.ownermanagementkbn == '5'}">
+										TechnicalManager</option>
+									<option value="6" th:selected="${shipMaintenanceInfo.ownermanagementkbn == '6'}">
+										Operator
+									</option>
+								</select>
+							</td>
+							<td colspan="4"> <input type="text" class="form-control" name="ownermanagementfrescomp"
+									maxlength="10" th:value="${shipMaintenanceInfo.ownermanagementfrescomp}">
+							</td>
+						</tr>
+						<tr>
+							<th th:text="#{thead.shipownermanual}"></th>
+							<td> <input type="text" class="form-control" name="ownercustomerManual" maxlength="200"
+									th:value="${shipMaintenanceInfo.ownercustomerManual}">
+							</td>
+							<td style="background-color:lightgray;"></td>
+							<td style="background-color:lightgray;">
+								<input type="text" class="form-control-plaintext" name="ownercustomerManualBk"
+									th:value="${shipMaintenanceInfo.ownercustomerManualBk}" readonly>
+							</td>
+						</tr>
+						<tr>
+							<th th:text="#{thead.shipmanagermanual}"></th>
+							<td> <input type="text" class="form-control" name="ownermanagementManual" maxlength="200"
+									th:value="${shipMaintenanceInfo.ownermanagementManual}">
+							<td style="background-color:lightgray;">
+
+							<td style="background-color:lightgray;">
+								<input type="text" class="form-control-plaintext" name="ownermanagementManualBk"
+									th:value="${shipMaintenanceInfo.ownermanagementManualBk}" readonly>
+							</td>
+						</tr>
+					</table>
+				</div>
+
+				<!--保証・付帯タブ-->
+				<div id="warrantyandincidental" class="tab-pane">
+					<table class="subTable subTable-container">
+						<tr>
+							<th colspan="6"> <i class="bi bi-info-circle"></i> [[#{thead.shipwarrantyinformation}]]</th>
+						</tr>
+						<tr>
+							<th th:text="#{thead.deliverydate}"></th>
+							<td><input type="date" max="9999-12-31" class="form-control" name="deliverydate"
+									th:value="${shipMaintenanceInfo.deliverydate}">
+							</td>
+
+							<th th:text="#{thead.shipyardwarrantytimelimit}"></th>
+							<td><input type="date" max="9999-12-31" class="form-control" name="shipyardwarrantydate"
+									th:value="${shipMaintenanceInfo.shipyardwarrantydate}">
+							</td>
+
+							<th th:text="#{thead.allwarrantytimelimit}"></th>
+							<td><input type="date" max="9999-12-31" class="form-control" name="allwarrantydate"
+									th:value="${shipMaintenanceInfo.allwarrantydate}">
+							</td>
+						</tr>
+					</table>
+
+					<table class="subTable subTable-container">
+						<tr>
+							<th colspan="4"> <i class="bi bi-info-circle"></i> [[#{thead.shipincidentalinformation}]]
+							</th>
+						</tr>
+						<tr>
+							<th th:text="#{thead.mmsi}"></th>
+							<td colspan=" 3">
+								<input type="text" class="form-control" name="mmsi" maxlength="50"
+									th:value="${shipMaintenanceInfo.mmsi}">
+							</td>
+						</tr>
+						<tr>
+							<th th:text="#{thead.callsign}"></th>
+							<td colspan=" 3">
+								<input type="text" class="form-control" name="callsign" maxlength="20"
+									th:value="${shipMaintenanceInfo.callsign}">
+							</td>
+						</tr>
+						<tr>
+							<th th:text="#{thead.inmarsattel}"></th>
+							<td colspan=" 2">
+								<input type="text" class="form-control" name="inmarsattel" maxlength="20"
+									th:value="${shipMaintenanceInfo.inmarsattel}">
+							</td>
+							<td colspan=" 2">
+								<input type="text" class="form-control" name="inmarsattel2" maxlength="20"
+									th:value="${shipMaintenanceInfo.inmarsattel2}">
+							</td>
+						</tr>
+						<tr>
+							<th th:text="#{thead.inmarsatfax}"></th>
+							<td colspan=" 2">
+								<input type="text" class="form-control" name="inmarsatfax" maxlength="20"
+									th:value="${shipMaintenanceInfo.inmarsatfax}">
+							</td>
+							<td colspan=" 2">
+								<input type="text" class="form-control" name="inmarsatfax2" maxlength="20"
+									th:value="${shipMaintenanceInfo.inmarsatfax2}">
+							</td>
+						</tr>
+						<tr>
+							<th th:text="#{thead.inmarsatemail}"></th>
+							<td colspan=" 2">
+								<input type="text" class="form-control" name="inmarsatemail" maxlength="100"
+									th:value="${shipMaintenanceInfo.inmarsatemail}">
+							</td>
+							<td colspan=" 2">
+								<input type="text" class="form-control" name="inmarsatemail2" maxlength="100"
+									th:value="${shipMaintenanceInfo.inmarsatemail2}">
+							</td>
+						</tr>
+						<tr>
+							<th th:text="#{thead.inmarsatctel}"></th>
+							<td colspan=" 2">
+								<input type="text" class="form-control" name="inmarsatctel" maxlength="20"
+									th:value="${shipMaintenanceInfo.inmarsatctel}">
+							</td>
+							<td colspan=" 2">
+								<input type="text" class="form-control" name="inmarsatctel2" maxlength="20"
+									th:value="${shipMaintenanceInfo.inmarsatctel2}">
+							</td>
+						</tr>
+						<tr>
+							<th th:text="#{thead.inmarsatcfax}"></th>
+							<td colspan=" 2">
+								<input type="text" class="form-control" name="inmarsatcfax" maxlength="20"
+									th:value="${shipMaintenanceInfo.inmarsatcfax}">
+							</td>
+							<td colspan=" 2">
+								<input type="text" class="form-control" name="inmarsatcfax2" maxlength="20"
+									th:value="${shipMaintenanceInfo.inmarsatcfax2}">
+							</td>
+						</tr>
+						<tr>
+							<th th:text="#{thead.inmarsatcemail}"></th>
+							<td colspan=" 2">
+								<input type="text" class="form-control" name="inmarsatcemail" maxlength="100"
+									th:value="${shipMaintenanceInfo.inmarsatcemail}">
+							</td>
+							<td colspan=" 2">
+								<input type="text" class="form-control" name="inmarsatcemail2" maxlength="100"
+									th:value="${shipMaintenanceInfo.inmarsatcemail2}">
+							</td>
+						</tr>
+						<tr>
+							<th th:text="#{thead.shiptel}"></th>
+							<td colspan=" 2">
+								<input type="text" class="form-control" name="shiptel" maxlength="20"
+									th:value="${shipMaintenanceInfo.shiptel}">
+							</td>
+							<td colspan=" 2">
+								<input type="text" class="form-control" name="shiptel2" maxlength="20"
+									th:value="${shipMaintenanceInfo.shiptel2}">
+							</td>
+						</tr>
+					</table>
+				</div>
+
+				<!--RMSタブ-->
+				<div id="rms" class="tab-pane">
+					<table class="subTable subTable-container">
+
+						<tr>
+							<th></th>
+							<th th:text="#{thead.ships}"></th>
+							<th th:text="#{thead.hermace}"></th>
+							<th th:text="#{thead.atlas}"></th>
+							<th th:text="#{thead.fop}"></th>
+						</tr>
+
+						<tr>
+							<th th:text="#{thead.rms}"></th>
+							<td>
+								<input class="form-check-input" type="checkbox" name="rmscode[0]" value="1"
+									th:checked="${shipMaintenanceInfo.rmscode[0] eq '1'}" />
+							</td>
+
+							<td>
+								<input class="form-check-input" type="checkbox" name="rmscode[1]" value="2"
+									th:checked="${shipMaintenanceInfo.rmscode[1] eq '2'}" />
+							</td>
+
+							<td>
+								<input class="form-check-input" type="checkbox" name="rmscode[2]" value="3"
+									th:checked="${shipMaintenanceInfo.rmscode[2] eq '3'}" />
+							</td>
+
+							<td>
+								<input class="form-check-input" type="checkbox" name="rmscode[3]" value="4"
+									th:checked="${shipMaintenanceInfo.rmscode[3] eq '4'}" />
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+	<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+	<script th:inline="javascript">
+
+
+		const environment = /*[[${@environment.getActiveProfiles()[0]}]]*/"environment";
+		const fileDrawingDir = /*[[${fileDrawingDir}]]*/"fileDrawingDir";
+		window.onload = function () {
+
+			const copyButton = document.getElementById("pathCopy");
+
+			if ((environment == "pr" || environment == "st" || environment == "st_fkr") && fileDrawingDir !== "") {
+				copyButton.disabled = null;
+			}
+		}
+
+		function folderPathCopy() {
+			copyToClipboard(fileDrawingDir);
+		}
+
+		function copyToClipboard(tagValue) {
+			if (navigator.clipboard) { // navigator.clipboardが使えるか判定する
+				return navigator.clipboard.writeText(tagValue).then(function () { // クリップボードへ書きむ
+				})
+			}
+		}
+
+		function updateShipInfo() {
+
+			const shipYard = document.getElementsByClassName("shipyard").item(0).value;
+			const shipNumber = document.getElementsByClassName("shipnumber").item(0).value;
+			const select1 = $("#ownercustomerSelect option:selected").val();
+			const select2 = $("#ownermanagementSelect option:selected").val();
+
+			let errorMessage = "";
+
+			if (shipYard === "" && shipNumber === "") {
+				errorMessage = [[#{message.w.0015}]];
+			} else if (shipYard !== "" && shipNumber === "") {
+				errorMessage = [[#{message.w.0006}]];
+			} else if (shipYard === "" && shipNumber !== "") {
+				errorMessage = [[#{message.w.0007}]];
+			}
+
+			if (select1 != "" && select2 != "") {
+				if (select1 == select2) {
+					if (errorMessage != "") {
+						errorMessage += "\n";
+					}
+					errorMessage += [[#{message.w.0016}]];
+				}
+			}
+
+			if (errorMessage === "") {
+				let result = window.confirm([[#{message.q.0001}]]);
+
+				if (result) {
+					let updateButton = document.getElementById("update");
+					updateButton.type = "submit";
+				}
+
+			} else {
+				window.alert(errorMessage);
+			}
+		}
+
+		function deleteShipInfo() {
+			let result = window.confirm([[#{message.q.0002}]]);
+
+			if (result) {
+				let updateButton = document.getElementById("delete");
+				updateButton.type = "submit";
+			}
+		}
+
+		function toequipment() {
+			let result = window.confirm([[#{message.q.0003}]]);
+
+			if (result) {
+				let toequipmentButton = document.getElementById("toequip");
+				toequipmentButton.type = "submit";
+			}
+		}
+
+		function toSearch() {
+			let returnButton = document.getElementById("return");
+			returnButton.type = "submit";
+
+		}
+
+		function validateNumberInput(input) {
+			input.value = input.value.replace(/[^0-9]/g, "");
+		}
+
+		// 絞り込み機能
+		$(function () {
+			/*造船所絞り込み*/
+			const shipyard = /*[[${shipyardStrList}]]*/"shipyardStrList";
+			$('#shipyardSuggest').autocomplete({
+				source: shipyard,
+				autoFocus: true,
+				delay: 0,
+				minLength: 1,
+				response: (event, ui) => {
+					if (ui.content.length > 20) {
+						ui.content.splice(20, ui.content.length);
+					}
+				}
+			});
+		});
+
+		$(function () {
+			/*船種絞り込み*/
+			const shipspecies = /*[[${shipspeciesStrList}]]*/"shipspeciesStrList";
+			$('#shipspeciesSuggest').autocomplete({
+				source: shipspecies,
+				autoFocus: true,
+				delay: 0,
+				minLength: 1,
+				response: (event, ui) => {
+					if (ui.content.length > 20) {
+						ui.content.splice(20, ui.content.length);
+					}
+				}
+			});
+		});
+
+		$(function () {
+			/*船級絞り込み*/
+			const shipclass = /*[[${shipclassStrList}]]*/"shipclassStrList";
+			$('#shipclassSuggest').autocomplete({
+				source: shipclass,
+				autoFocus: true,
+				delay: 0,
+				minLength: 1,
+				response: (event, ui) => {
+					if (ui.content.length > 20) {
+						ui.content.splice(20, ui.content.length);
+					}
+				}
+			});
+		});
+
+		$(function () {
+			/*船籍絞り込み*/
+			const country = /*[[${countryStrList}]]*/"countryStrList";
+			$('#countrySuggest').autocomplete({
+				source: country,
+				autoFocus: true,
+				delay: 0,
+				minLength: 1,
+				response: (event, ui) => {
+					if (ui.content.length > 20) {
+						ui.content.splice(20, ui.content.length);
+					}
+				}
+			});
+		});
+
+		$(function () {
+			/*取引先絞り込み*/
+			const customer = /*[[${customerStrList}]]*/"customerStrList";
+			$('#customerSuggest').autocomplete({
+				source: customer,
+				autoFocus: true,
+				delay: 0,
+				minLength: 1,
+				response: (event, ui) => {
+					if (ui.content.length > 20) {
+						ui.content.splice(20, ui.content.length);
+					}
+				}
+			});
+		});
+
+		$(function () {
+			/*船舶管理会社絞り込み*/
+			const managementoffice = /*[[${customerStrList}]]*/"customerStrList";
+			$('#managementofficeSuggest').autocomplete({
+				source: managementoffice,
+				autoFocus: true,
+				delay: 0,
+				minLength: 1,
+				response: (event, ui) => {
+					if (ui.content.length > 20) {
+						ui.content.splice(20, ui.content.length);
+					}
+				}
+			});
+		});
+
+		$(function () {
+			/*船主絞り込み*/
+			const contact = /*[[${contactStrList}]]*/"contactStrList";
+			$('#contactSuggest').autocomplete({
+				source: contact,
+				autoFocus: true,
+				delay: 0,
+				minLength: 1,
+				response: (event, ui) => {
+					if (ui.content.length > 20) {
+						ui.content.splice(20, ui.content.length);
+					}
+				}
+			});
+		});
+
+		$(function () {
+			/*グループ絞り込み*/
+			const group = /*[[${groupStrList}]]*/"groupStrList";
+			$('#groupSuggest').autocomplete({
+				source: group,
+				autoFocus: true,
+				delay: 0,
+				minLength: 1,
+				response: (event, ui) => {
+					if (ui.content.length > 20) {
+						ui.content.splice(20, ui.content.length);
+					}
+				}
+			});
+		});
+
+		// 絞り込み入力欄テキスト削除機能
+		// 造船所
+		function shipyardChange(obj) {
+			let data = {shipyard: obj.value};
+
+			// コンテキストパスの取得
+			let contextPath = /*[[ @{/} ]]*/ '';
+
+			$.ajax({
+				url: contextPath + 'shipyardCertify',
+				method: 'post',
+				data: JSON.stringify(data),
+				contentType: 'application/json',
+				dataType: "json",
+				cache: false
+
+			}).done(function (data, status, jqxhr) {
+				if (!data) {
+					obj.value = "";
+				}
+
+			}).fail(function (data, status, jqxhr) {
+			});
+		}
+
+		// 顧客（取引先、船舶管理会社、船主）
+		function customerChange(obj) {
+			let data = {customer: obj.value};
+
+			// コンテキストパスの取得
+			let contextPath = /*[[ @{/} ]]*/ '';
+
+			$.ajax({
+				url: contextPath + 'customerCertify',
+				method: 'post',
+				data: JSON.stringify(data),
+				contentType: 'application/json',
+				dataType: "json",
+				cache: false
+
+			}).done(function (data, status, jqxhr) {
+				if (!data) {
+					obj.value = "";
+				}
+
+			}).fail(function (data, status, jqxhr) {
+			});
+		}
+
+		// 船種
+		function shipspeciesChange(obj) {
+			let data = {shipSpecies: obj.value};
+
+			// コンテキストパスの取得
+			let contextPath = /*[[ @{/} ]]*/ '';
+
+			$.ajax({
+				url: contextPath + 'shipspeciesCertify',
+				method: 'post',
+				data: JSON.stringify(data),
+				contentType: 'application/json',
+				dataType: "json",
+				cache: false
+
+			}).done(function (data, status, jqxhr) {
+				if (!data) {
+					obj.value = "";
+				}
+
+			}).fail(function (data, status, jqxhr) {
+			});
+		}
+
+		// 国（船籍）
+		function countryChange(obj) {
+			let data = {shipNationality: obj.value};
+
+			// コンテキストパスの取得
+			let contextPath = /*[[ @{/} ]]*/ '';
+
+			$.ajax({
+				url: contextPath + 'countryCertify',
+				method: 'post',
+				data: JSON.stringify(data),
+				contentType: 'application/json',
+				dataType: "json",
+				cache: false
+
+			}).done(function (data, status, jqxhr) {
+				if (!data) {
+					obj.value = "";
+				}
+
+			}).fail(function (data, status, jqxhr) {
+			});
+		}
+
+		// 船級
+		function shipclassChange(obj) {
+			let data = {shipClass: obj.value};
+
+			// コンテキストパスの取得
+			let contextPath = /*[[ @{/} ]]*/ '';
+
+			$.ajax({
+				url: contextPath + 'shipclassCertify',
+				method: 'post',
+				data: JSON.stringify(data),
+				contentType: 'application/json',
+				dataType: "json",
+				cache: false
+
+			}).done(function (data, status, jqxhr) {
+				if (!data) {
+					obj.value = "";
+				}
+
+			}).fail(function (data, status, jqxhr) {
+			});
+		}
+
+		// グループ
+		function groupChange(obj) {
+			let data = {group: obj.value};
+
+			// コンテキストパスの取得
+			let contextPath = /*[[ @{/} ]]*/ '';
+
+			$.ajax({
+				url: contextPath + 'groupCertify',
+				method: 'post',
+				data: JSON.stringify(data),
+				contentType: 'application/json',
+				dataType: "json",
+				cache: false
+
+			}).done(function (data, status, jqxhr) {
+				if (!data) {
+					obj.value = "";
+				}
+
+			}).fail(function (data, status, jqxhr) {
+			});
+		}
+	</script>
+</body>
+
+</html>

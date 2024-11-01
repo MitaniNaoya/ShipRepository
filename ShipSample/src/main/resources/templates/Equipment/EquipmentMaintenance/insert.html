@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{common/layout/template :: layout(~{::title},~{::body/content()})}">
+
+<head>
+	<title th:text="#{disp.equipmentupdate}"></title>
+</head>
+
+<body>
+
+	<div class="container">
+
+		<h1 class="title" th:text="#{disp.equipmentregister}"></h1>
+
+		<form name="equipmentMaintenanceForm" method="post" th:object="${equipmentMaintenanceForm}">
+
+			<!-- 各種ボタン -->
+			<div class="btndiv">
+				<button type="button" onclick="save()" class="btn btn-save btn-icon" id="savebtn"
+					th:formaction="|@{/Equipment/EquipmentMaintenance/save/__${shipInfo.fShipno}__}|">
+					<i class="bi bi-save"></i>[[#{button.save}]]
+				</button>
+
+				<button type="button" onclick="returnback()" class="btn btn-primary returnbtn btn-icon" id="returnbtn"
+					th:formaction="|@{/Equipment/EquipmentList/index/__${shipInfo.fShipno}__}|">
+					<i class="bi bi-arrow-counterclockwise"></i>[[#{button.return}]]
+				</button>
+			</div>
+
+			<!-- タブ -->
+			<ul class="nav nav-tabs">
+				<li class="nav-item">
+					<button class="nav-link active" data-bs-toggle="tab" data-bs-target="#basicinformation"
+						type="button" th:text="#{label.basicinformation}"></button>
+				</li>
+				<li class="nav-item">
+					<button class="nav-link" data-bs-toggle="tab" data-bs-target="#iteminformation" type="button"
+						th:text="#{label.iteminformation}"></button>
+				</li>
+				<li class="nav-item">
+					<button class="nav-link" data-bs-toggle="tab" data-bs-target="#programinformation" type="button"
+						th:text="#{label.programinformation}"></button>
+				</li>
+				<li class="nav-item">
+					<button class="nav-link" data-bs-toggle="tab" data-bs-target="#consumablepartsinformation"
+						type="button" th:text="#{label.consumablepartsinformation}"></button>
+				</li>
+			</ul>
+
+
+			<!-- タブ -->
+			<div class="tab-content">
+
+				<!-- 基本情報タブ -->
+				<div id="basicinformation" class="tab-pane active">
+
+					<!-- 基本情報 -->
+					<div class="table-responsive">
+						<table class="mainTable mainTable-container">
+							<tr align="left">
+								<th colspan="6"><i class="bi bi-info-circle"></i>[[#{label.basicinformation}]]</th>
+							</tr>
+							<tr>
+								<th th:text="#{thead.Fshipno}"></th>
+								<td th:text="${shipInfo.fShipno}"></td>
+								<th th:text="#{thead.imono}"></th>
+								<td th:text="${shipInfo.imono}"></td>
+								<th th:text="#{thead.shipnumber}"></th>
+								<td th:text="${shipInfo.shipnumber}"></td>
+							</tr>
+							<tr>
+								<th th:text="#{thead.shiptype}"></th>
+								<td th:text="${shipInfo.shiptype}"></td>
+								<th th:text="#{thead.shipnationality}"></th>
+								<td th:text="${shipInfo.shipnationality}"></td>
+								<th th:text="#{thead.shipspecies}"></th>
+								<td th:text="${shipInfo.shipspecies}"></td>
+							</tr>
+							<tr>
+								<th th:text="#{thead.shipname}"></th>
+								<td th:text="${shipInfo.shipnamejp}"></td>
+								<th th:text="#{thead.series}"></th>
+								<td th:text="${shipInfo.series}"></td>
+								<th th:text="#{thead.grosstonnage}"></th>
+								<td th:text="${shipInfo.grosstonnage}"></td>
+							</tr>
+							<tr>
+								<th th:text="#{thead.shipclass}"></th>
+								<td th:text="${shipInfo.shipclass}"></td>
+								<th th:text="#{thead.shipyard}"></th>
+								<td th:text="${shipInfo.shipyard}" colspan="3"></td>
+							</tr>
+							<tr>
+								<th th:text="#{thead.builddate}"></th>
+								<td th:text="${shipInfo.builddate}"></td>
+								<th th:text="#{thead.customer}"></th>
+								<td th:text="${shipInfo.customer}" colspan="3"></td>
+							</tr>
+						</table>
+					</div>
+
+					<!-- 装備情報 -->
+					<table class="subTable subTable-container">
+						<tr align="left">
+							<th colspan="12"><i class="bi bi-info-circle"></i>[[#{label.equipmentinformation}]]</th>
+						</tr>
+						<tr>
+							<th th:text="#{thead.status}"></th>
+							<td colspan="6" class="disable"><input class="form-control-plaintext" type="text"
+									name="status" readonly /></td>
+							<th th:text="#{thead.equipmentid}"></th>
+							<td colspan="6" class="disable"><input class="form-control-plaintext" type="text"
+									name="equipmentid" readonly /></td>
+						</tr>
+						<tr>
+							<th th:text="#{thead.model}"></th>
+							<td colspan="6"><input class="form-control" type="text" onchange="modelChange(this)"
+									id="modelSuggest" name="model" /></td>
+							<th th:text="#{thead.identification}"></th>
+							<td colspan="3" style="width: 220px;">
+								<select class="form-select" name="identificationcode" id="selectIdentification">
+									<option value="" selected></option>
+								</select>
+							</td>
+							<td style="width: 140px;"><input class="form-control" type="text" name="identificationname" maxlength="20" /></td>
+						</tr>
+						<tr>
+							<th th:text="#{thead.shippingdate}"></th>
+							<td colspan="6"><input class="form-control" type="date" max="9999-12-31" name="shippingdate" /></td>
+							<th th:text="#{thead.shippingdatefleet}"></th>
+							<td colspan="6"><input class="form-control" type="date" max="9999-12-31" name="equipmentdateFleet" /></td>
+						<tr>
+						<tr>
+							<th th:text="#{thead.equipmentdate}"></th>
+							<td colspan="6"><input class="form-control" type="date" max="9999-12-31" name="equipmentdate" /></td>
+							<th th:text="#{thead.equipmentremovedate}"></th>
+							<td colspan="6"><input class="form-control" type="date" max="9999-12-31" name="equipmentremovedate" /></td>
+						</tr>
+						<tr>
+							<th th:text="#{thead.shiprecycle}"></th>
+							<td colspan="6">
+								<select class="form-select" name="shiprecycle" id="shiprecycle">
+									<option value="" selected></option>
+									<option value="0">無</option>
+									<option value="2">有</option>
+								</select>
+							</td>
+							<th th:text="#{thead.equipmentstatuskbn}"></th>
+							<td colspan="6">
+								<select class="form-select" name="equipmentstatuskbn" id="equipmentstatuskbn">
+									<option value="" selected></option>
+									<option value="0">装備中</option>
+									<option value="9">未装備</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<th th:text="#{thead.salesjurisdict}"></th>
+							<td colspan="12"><input class="form-control" type="text" name="salesjurisdict"
+									maxlength="60" />
+							</td>
+						</tr>
+						<tr>
+							<th th:text="#{thead.remarks}"></th>
+							<td colspan="12"><textarea class="form-control" name="remarks" rows="3"
+									maxlength="200"></textarea></td>
+						</tr>
+						<tr>
+							<th th:text="#{thead.fullwarrantdeadline}"></th>
+							<td colspan="6"><input class="form-control" type="date" max="9999-12-31" name="warrantydate" /></td>
+							<th th:text="#{thead.shipyardwarrantydate}"></th>
+							<td colspan="6"><input class="form-control" type="date" max="9999-12-31" name="shipyardwarrantydate" /></td>
+						</tr>
+						<tr>
+							<th th:text="#{thead.smskeyno}"></th>
+							<td colspan="6" class="disable"><input class="form-control-plaintext" type="text"
+									name="smskeyno" maxlength="13" readonly /></td>
+							<th th:text="#{thead.projectmodelid}"></th>
+							<td colspan="6" class="disable"><input class="form-control-plaintext" type="text"
+									name="projectmodelid" maxlength="13" readonly />
+							</td>
+						</tr>
+						<tr>
+							<th th:text="#{thead.ordernumber}"></th>
+							<td colspan="6" class="disable"><input class="form-control-plaintext" type="text"
+									name="saporderno" maxlength="10" readonly /></td>
+							<th th:text="#{thead.orderitemnumber}"></th>
+							<td colspan="6" class="disable"><input class="form-control-plaintext" type="text"
+									name="saporderlineno" maxlength="6" readonly />
+							</td>
+						</tr>
+					</table>
+				</div>
+
+				<!-- 品目情報タブ -->
+				<div id="iteminformation" class="tab-pane">
+
+					<input type="button" value="行追加" onclick="addItemRow()" class="tabbtn">
+					<div class="table-responsive">
+						<table class="subTable subTable-container" id="itemTable" border="1" style="width: 160%;">
+							<tr class="textcenter">
+								<th th:text="#{thead.status}" style="width: 5.5%;"></th>
+								<th th:text="#{thead.ordernum}" style="width: 3.5%;"></th>
+								<th th:text="#{thead.item}" colspan="2" style="width: 35%;"></th>
+								<th th:text="#{thead.machinenumber}" style="width: 10%;"></th>
+								<th th:text="#{thead.quantity}" style="width: 4%;"></th>
+								<th th:text="#{thead.deliverynumber}" style="width: 5%;"></th>
+								<th th:text="#{thead.deliveryitemnumber}" style="width: 5%;"></th>
+								<th th:text="#{thead.ordernumber}" style="width: 5%;"></th>
+								<th th:text="#{thead.orderitemnumber}" style="width: 5%;"></th>
+							</tr>
+							<tr>
+								<td class="disable"><input class="form-control-plaintext" type="text" name="iStatus"
+										readonly />
+								</td>
+								<td><input class="form-control sortno" type="text" name="sortno" maxlength="3" /></td>
+								<td><input class="form-control itemSuggest" type="text" onchange="itemChange(this)"
+										name="item" id="0" /></td>
+								<td class="disable"><input class="form-control-plaintext itemtext" type="text"
+										name="itemtext" readonly /></td>
+								<td><input class="form-control machinenum" type="text" name="machinenum" maxlength="70" /></td>
+								<td><input class="form-control quantity" type="text" name="quantity" maxlength="3" />
+								</td>
+								<td class="disable"><input class="form-control-plaintext" type="text"
+										name="sapshippingno" maxlength="10" readonly /></td>
+								<td class="disable"><input class="form-control-plaintext" type="text"
+										name="sapshippinglineno" maxlength="6" readonly /></td>
+								<td class="disable"><input class="form-control-plaintext" type="text" name="iSaporderno"
+										maxlength="10" readonly /></td>
+								<td class="disable"><input class="form-control-plaintext" type="text"
+										name="iSaporderlineno" maxlength="6" readonly /></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+
+				<!-- プログラム情報タブ -->
+				<div id="programinformation" class="tab-pane">
+
+					<input type="button" value="行追加" onclick="addProgramRow()" class="tabbtn">
+					<table class="subTable subTable-container" id="programTable" border="1">
+						<tr class="textcenter">
+							<th th:text="#{thead.individualizedsoftware}"></th>
+							<th th:text="#{thead.base}"></th>
+							<th th:text="#{thead.programnumber}"></th>
+							<th th:text="#{thead.remarks}"></th>
+						</tr>
+						<tr>
+							<td hidden="true"><input type="hidden" name="pRowCount" /></td>
+							<td>
+								<select class="form-select" name="individualsupport">
+									<option value=""></option>
+									<option value="1">有</option>
+								</select>
+							</td>
+							<td><input class="form-control" type="text" name="base" maxlength="50" /></td>
+							<td><input class="form-control" type="text" name="programno" maxlength="50" /></td>
+							<td><input class="form-control" type="text" name="pRemarks" maxlength="200" /></td>
+						</tr>
+					</table>
+				</div>
+
+				<!-- 消耗部品情報タブ -->
+				<div id="consumablepartsinformation" class="tab-pane">
+
+					<input type="button" value="行追加" onclick="addConsumablepartsRow()" class="tabbtn">
+					<table class="subTable subTable-container" id="consumablepartsTable" border="1">
+						<tr class="textcenter">
+							<th th:text="#{thead.partname}"></th>
+							<th th:text="#{thead.courtlycompulsoryitem}"></th>
+							<th th:text="#{thead.replacementcycle}"></th>
+							<th th:text="#{thead.replacementdate}"></th>
+						</tr>
+						<tr>
+							<td hidden="true"><input type="hidden" name="cRowCount" /></td>
+							<td><input class="form-control" type="text" name="partsname" maxlength="50" /></td>
+							<td>
+								<select class="form-select" name="mandatoryparts">
+									<option value=""></option>
+									<option value="1">対象</option>
+								</select>
+							</td>
+							<td><input class="form-control exchangecycle" type="text" name="exchangecycle"
+									maxlength="2" />
+							</td>
+							<td><input class="form-control" type="date" max="9999-12-31" name="expecteddate" /></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+	<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+	<script th:inline="javascript">
+		// 絞り込み機能
+		$(function () {
+			const model = /*[[${modelStrList}]]*/"modelStrList";
+
+			$('#modelSuggest').autocomplete({
+				source: model,
+				autoFocus: true,
+				delay: 0,
+				minLength: 1,
+				response: (event, ui) => {
+					if (ui.content.length > 20) {
+						ui.content.splice(20, ui.content.length);
+					}
+				}
+			});
+		});
+
+		$(function () {
+			const item = /*[[${itemStrList}]]*/"itemStrList";
+
+			$('.itemSuggest').autocomplete({
+				source: item,
+				autoFocus: true,
+				delay: 0,
+				minLength: 1,
+				response: (event, ui) => {
+					if (ui.content.length > 20) {
+						ui.content.splice(20, ui.content.length);
+					}
+				}
+			});
+		});
+
+		// タブの行追加
+		// 品目タブ
+		function addItemRow() {
+			let table = document.getElementById("itemTable");
+			let row = table.insertRow(-1);
+			let rowCount = table.rows.length - 2;
+
+			for (let i = 0; i < 10; i++) {
+				let cell = row.insertCell(-1);
+				let input = document.createElement("input");
+
+				switch (i) {
+					case 0:
+						cell.className = "disable"
+						input.type = "text";
+						input.className = "form-control-plaintext";
+						input.setAttribute("name", "iStatus");
+						input.readOnly = true;
+						break;
+
+					case 1:
+						input.type = "text";
+						input.className = "form-control sortno";
+						input.setAttribute("name", "sortno");
+						input.setAttribute("maxlength", "3");
+						break;
+
+					case 2:
+						input.type = "text";
+						input.className = "form-control itemSuggest";
+						input.setAttribute("name", "item");
+						input.setAttribute("id", rowCount);
+						input.setAttribute("onchange", "itemChange(this)");
+						break;
+
+					case 3:
+						cell.className = "disable"
+						input.type = "text";
+						input.className = "form-control-plaintext itemtext";
+						input.setAttribute("name", "itemtext");
+						input.readOnly = true;
+						break;
+
+					case 4:
+						input.type = "text";
+						input.className = "form-control machinenum";
+						input.setAttribute("name", "machinenum");
+						input.setAttribute("maxlength", "70");
+						break;
+
+					case 5:
+						input.type = "text";
+						input.className = "form-control quantity";
+						input.setAttribute("name", "quantity");
+						input.setAttribute("maxlength", "3");
+						break;
+
+					case 6:
+						cell.className = "disable"
+						input.type = "text";
+						input.className = "form-control-plaintext";
+						input.setAttribute("name", "sapshippingno");
+						input.setAttribute("maxlength", "10");
+						input.readOnly = true;
+						break;
+
+					case 7:
+						cell.className = "disable"
+						input.type = "text";
+						input.className = "form-control-plaintext";
+						input.setAttribute("name", "sapshippinglineno");
+						input.setAttribute("maxlength", "6");
+						input.readOnly = true;
+						break;
+
+					case 8:
+						cell.className = "disable"
+						input.type = "text";
+						input.className = "form-control-plaintext";
+						input.setAttribute("name", "iSaporderno");
+						input.setAttribute("maxlength", "10");
+						input.readOnly = true;
+						break;
+
+					case 9:
+						cell.className = "disable"
+						input.type = "text";
+						input.className = "form-control-plaintext";
+						input.setAttribute("name", "iSaporderlineno");
+						input.setAttribute("maxlength", "6");
+						input.readOnly = true;
+						break;
+				}
+
+				cell.appendChild(input);
+			}
+
+			$(function () {
+				const item = /*[[${itemStrList}]]*/"itemStrList";
+
+				$('.itemSuggest').autocomplete({
+					source: item,
+					autoFocus: true,
+					delay: 0,
+					minLength: 1,
+					response: (event, ui) => {
+						if (ui.content.length > 20) {
+							ui.content.splice(20, ui.content.length);
+						}
+					}
+				});
+			});
+		}
+
+		// プログラム情報タブ
+		function addProgramRow() {
+			let table = document.getElementById("programTable");
+			let row = table.insertRow(-1);
+
+			const individualsupport = [
+				{value: '', name: ''},
+				{value: 1, name: '有'},
+			]
+
+			for (let i = 0; i < 5; i++) {
+				let cell = row.insertCell(-1);
+				let input = document.createElement("input");
+				input.className = "form-control";
+				input.type = "text";
+
+				switch (i) {
+					case 0:
+						cell.hidden = true;
+						input.setAttribute("name", "pRowCount");
+						input.hidden = true;
+						break;
+
+					case 1:
+						let select = document.createElement("select");
+						select.classList.add("form-select");
+						select.setAttribute("name", "individualsupport");
+
+						individualsupport.forEach((v) => {
+							let option = document.createElement("option");
+							option.value = v.value;
+							option.textContent = v.name;
+
+							select.appendChild(option);
+						});
+
+						cell.appendChild(select);
+						break;
+
+					case 2:
+						input.setAttribute("name", "base");
+						input.setAttribute("maxlength", "50");
+						break;
+
+					case 3:
+						input.setAttribute("name", "programno");
+						input.setAttribute("maxlength", "50");
+						break;
+
+					case 4:
+						input.setAttribute("name", "pRemarks");
+						input.setAttribute("maxlength", "200");
+						break;
+				}
+
+				if (i != 1) {
+					cell.appendChild(input);
+				}
+			}
+		}
+
+		// 消耗部品情報タブ
+		function addConsumablepartsRow() {
+			let table = document.getElementById("consumablepartsTable");
+			let row = table.insertRow(-1);
+
+			const mandatoryparts = [
+				{value: '', name: ''},
+				{value: 1, name: '対象'},
+			]
+
+			for (let i = 0; i < 5; i++) {
+				let cell = row.insertCell(-1);
+				let input = document.createElement("input");
+
+				switch (i) {
+					case 0:
+						cell.hidden = true;
+						input.setAttribute("name", "cRowCount");
+						input.hidden = true;
+						break;
+
+					case 1:
+						input.className = "form-control";
+						input.type = "text";
+						input.setAttribute("name", "partsname");
+						input.setAttribute("maxlength", "50");
+						break;
+
+					case 2:
+						let select = document.createElement("select");
+						select.classList.add("form-select");
+						select.setAttribute("name", "mandatoryparts");
+
+						mandatoryparts.forEach((v) => {
+							let option = document.createElement("option");
+							option.value = v.value;
+							option.textContent = v.name;
+
+							select.appendChild(option);
+						});
+
+						cell.appendChild(select);
+						break;
+
+					case 3:
+						input.className = "form-control exchangecycle";
+						input.type = "text";
+						input.setAttribute("name", "exchangecycle");
+						input.setAttribute("maxlength", "2");
+						break;
+
+					case 4:
+						input.className = "form-control";
+						input.type = "date";
+						input.max = "9999-12-31";
+						input.setAttribute("name", "expecteddate");
+						break;
+				}
+
+				if (i != 2) {
+					cell.appendChild(input);
+				}
+			}
+		}
+
+		// 保存ボタン押下（入力チェック）
+		function save() {
+			const checkIfNumber = /^[0-9]+$/;
+			let isStringSortno = false;
+			let isStringQuantity = false;
+			let isStringExchangecycle = false;
+
+			const sortnoList = document.getElementsByClassName("sortno");
+			const quantityList = document.getElementsByClassName("quantity");
+			const exchangecycleList = document.getElementsByClassName("exchangecycle");
+
+			for (let i = 0; i < sortnoList.length; i++) {
+				let sortno = sortnoList.item(i).value;
+
+				if (!isStringSortno) {
+					if (!sortno === "" || sortno.match(/\S/g)) {
+						if (!checkIfNumber.test(sortno)) {
+							isStringSortno = true;
+						}
+					}
+				}
+			}
+
+			for (let i = 0; i < quantityList.length; i++) {
+				let quantity = quantityList.item(i).value;
+
+				if (!isStringQuantity) {
+					if (!quantity === "" || quantity.match(/\S/g)) {
+						if (!checkIfNumber.test(quantity)) {
+							isStringQuantity = true;
+						}
+					}
+				}
+			}
+
+			for (let i = 0; i < exchangecycleList.length; i++) {
+				let exchangecycle = exchangecycleList.item(i).value;
+
+				if (!isStringExchangecycle) {
+					if (!exchangecycle === "" || exchangecycle.match(/\S/g)) {
+						if (!checkIfNumber.test(exchangecycle)) {
+							isStringExchangecycle = true;
+						}
+					}
+				}
+			}
+
+			if (isStringSortno || isStringQuantity || isStringExchangecycle) {
+				let errorMessage = "";
+				let errorCount = 1;
+
+				if (isStringSortno) {
+					errorMessage += [[#{message.w.0010}]];
+					errorCount++;
+				}
+
+				if (isStringQuantity) {
+					if (errorCount >= 2) {
+						errorMessage += "\n";
+					}
+					errorMessage += [[#{message.w.0011}]];
+					errorCount++;
+				}
+
+				if (isStringExchangecycle) {
+					if (errorCount >= 2) {
+						errorMessage += "\n";
+					}
+					errorMessage += [[#{message.w.0012}]];
+				}
+
+				window.alert(errorMessage);
+
+			} else {
+				let sendList = {};
+				let sendObj = [];
+
+				const inputItemList = document.getElementsByClassName("itemSuggest");
+				const inputMachinenumList = document.getElementsByClassName("machinenum");
+				for (let i = 0; i < inputItemList.length; i++) {
+					let item = inputItemList.item(i).value;
+					let machinenum = inputMachinenumList.item(i).value;
+
+					let dataObj = {"item": item, "imachinenum": machinenum};
+					sendObj.push(dataObj);
+				}
+
+				sendList.dtolist = sendObj;
+
+				// コンテキストパスの取得
+				let contextPath = /*[[ @{/} ]]*/ '';
+
+				// 品目、機番の重複チェック
+				$.ajax({
+					url: contextPath + 'duplicationCheck',
+					method: 'post',
+					data: JSON.stringify(sendList),
+					contentType: 'application/json',
+					dataType: "json",
+					cache: false
+
+				}).done(function (data, status, jqxhr) {
+					if (data.message === "") {
+						let result = window.confirm([[#{message.q.0001}]]);
+						let savebtn = document.getElementById('savebtn');
+
+						// OK押下後、一度空の処理をはさんで正しくsubmitさせる
+						if (result) {
+							savebtn.type = "submit";
+							savebtn.onclick = submit;
+							savebtn.click();
+						}
+
+					} else {
+						let result = window.confirm(data.message + [[#{message.q.0001}]]);
+						let savebtn = document.getElementById('savebtn');
+
+						// OK押下後、一度空の処理をはさんで正しくsubmitさせる
+						if (result) {
+							savebtn.type = "submit";
+							savebtn.onclick = submit;
+							savebtn.click();
+						}
+					}
+
+				}).fail(function (data, status, jqxhr) {
+				});
+			}
+		}
+
+		// 保存ボタン押下時に正しく処理を実行する
+		function submit() {
+		}
+
+		// 戻るボタン押下
+		function returnback() {
+			let returnbtn = document.getElementById('returnbtn');
+			returnbtn.type = "submit";
+		}
+
+		// 機種入力
+		function modelChange(obj) {
+			let data = {model: obj.value};
+
+			// コンテキストパスの取得
+			let contextPath = /*[[ @{/} ]]*/ '';
+
+			// DBに無ければ入力した文字を削除
+			$.ajax({
+				url: contextPath + 'modelCertify',
+				method: 'post',
+				data: JSON.stringify(data),
+				contentType: 'application/json',
+				dataType: "json",
+				cache: false
+
+			}).done(function (data, status, jqxhr) {
+				if (!data) {
+					obj.value = "";
+				}
+			}).fail(function (data, status, jqxhr) {
+			});
+
+			// 識別リスト作成
+			$.ajax({
+				url: contextPath + 'model',
+				method: 'post',
+				data: JSON.stringify(data),
+				contentType: 'application/json',
+				dataType: "json",
+				cache: false
+
+			}).done(function (data, status, jqxhr) {
+				let select = $('#selectIdentification');
+
+				// セレクトボックスを初期化
+				select.children().remove();
+				let initOption = $('<option>')
+					.text("")
+					.val("");
+				select.append(initOption);
+
+				// セレクトボックスに追加
+				data.forEach(function (value) {
+					let option = $('<option>')
+						.text(value.identificationnamejp)
+						.val(value.identificationcode);
+					select.append(option);
+				});
+
+			}).fail(function (data, status, jqxhr) {
+			});
+		}
+
+		// 品目入力で品目テキスト取得
+		function itemChange(obj) {
+			let data = {item: obj.value};
+
+			const itemtextList = document.querySelectorAll('.itemtext');
+			itemtextList[obj.id].value = "";
+
+			// コンテキストパスの取得
+			let contextPath = /*[[ @{/} ]]*/ '';
+
+			$.ajax({
+				url: contextPath + 'item',
+				method: 'post',
+				data: JSON.stringify(data),
+				contentType: 'application/json',
+				dataType: "json",
+				cache: false
+
+			}).done(function (data, status, jqxhr) {
+				itemtextList[obj.id].value = data.itemTxtJ;
+
+				// DBに無ければ入力した文字を削除
+			}).fail(function (data, status, jqxhr) {
+				obj.value = "";
+			});
+		}
+	</script>
+</body>
+
+</html>

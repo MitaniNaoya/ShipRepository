@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{common/layout/template :: layout(~{::title},~{::body/content()})}">
+
+<head>
+	<title th:text="#{disp.shipsearch}"></title>
+</head>
+
+<body>
+
+	<style>
+		/*船検索*/
+		.searchtbl,
+		.resulttbl {
+			width: 100%;
+			margin: auto;
+			margin-top: 35px;
+		}
+
+		.resulttbl th {
+			white-space: nowrap;
+			table-layout: fixed;
+			width: 150px;
+			background-color: rgb(207, 244, 252);
+			border-collapse: collapse;
+			text-align: center;
+		}
+
+		.resulttbl th,
+		.resulttbl td {
+			height: 53px;
+			padding: 7px;
+			border: 1px solid rgb(192, 192, 192);
+		}
+
+		.resulttbl td {
+			vertical-align: baseline;
+			table-layout: fixed;
+			max-width: 50em;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+	</style>
+
+	<div class="container" style="max-width: 96%;">
+
+		<h1 class="title" th:text="#{disp.shipsearch}"></h1>
+
+		<!-- 新規登録 -->
+		<div class="btndiv">
+			<form method="get" th:action="@{/Ship/ShipMaintenance/index}">
+				<button type="submit" class="btn btn-save btn-icon">
+					<i class="bi bi-file-earmark-plus"></i>[[#{button.registernew}]]
+				</button>
+			</form>
+		</div>
+
+		<!-- 検索 -->
+		<form method="post" name="searchForm" th:action="@{/Ship/ShipSearch/index}" th:object="${shipSearchForm}">
+			<table class="searchtbl">
+				<tr>
+					<th th:text="#{label.shipyard}"></th>
+					<td></td>
+					<th th:text="#{label.shipnumber}"></th>
+					<td></td>
+					<th th:text="#{label.customer}"></th>
+					<td></td>
+					<th th:text="#{label.series}"></th>
+					<td></td>
+					<th th:text="#{label.shipname}"></th>
+					<td></td>
+					<th th:text="#{label.shipmanegementoffice}"></th>
+				</tr>
+				<tr>
+					<td><input class="form-control" type="text" id="shipyardSuggest" th:field="*{shipyardcode}" />
+					</td>
+					<td></td>
+					<td><input class="form-control" type="text" th:field="*{shipnumber}" /></td>
+					<td>　</td>
+					<td><input class="form-control" type="text" id="customerSuggest" th:field="*{customercode}" />
+					</td>
+					<td>　</td>
+					<td><input class="form-control" type="text" th:field="*{series}" /></td>
+					<td>　</td>
+					<td><input class="form-control" type="text" th:field="*{shipnamejp}" /></td>
+					<td>　</td>
+					<td><input class="form-control" type="text" id="managementofficeSuggest"
+							th:field="*{managementofficecode}" /></td>
+				</tr>
+				<tr>
+					<th colspan="3" th:text="#{label.shipspecies}"></th>
+					<td></td>
+					<th colspan="3" th:text="#{label.shipregistration}"></th>
+					<td></td>
+					<th th:text="#{label.shipclass}"></th>
+					<td></td>
+					<th th:text="#{label.shiptype}"></th>
+				</tr>
+				<tr>
+					<td colspan="3"><input class="form-control" type="text" id="shipspeciesSuggest"
+							th:field="*{shipspecies}" /></td>
+					<td></td>
+					<td colspan="3"><input class="form-control" type="text" id="countrySuggest"
+							th:field="*{shipnationality}" /></td>
+					<td></td>
+					<td><input class="form-control" type="text" id="shipclassSuggest" th:field="*{shipclass}" />
+					</td>
+					<td></td>
+					<td>
+						<select class="form-select" name="shiptype" id="shiptype">
+							<option value="" selected></option>
+							<option th:selected="*{shiptype == '1'}" value="1">商船</option>
+							<option th:selected="*{shiptype == '2'}" value="2">官公庁</option>
+							<option th:selected="*{shiptype == '3'}" value="3">保証カード</option>
+							<option th:selected="*{shiptype == '4'}" value="4">漁船</option>
+							<option th:selected="*{shiptype == '5'}" value="5">プレジャー</option>
+							<option th:selected="*{shiptype == '6'}" value="6">無線・陸上局</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th colspan="3" th:text="#{label.grosstonnage}"></th>
+					<td></td>
+					<th th:text="#{label.imono}"></th>
+				</tr>
+				<tr>
+					<td><input class="form-control" type="text" th:field="*{grosstonnageFrom}" /></td>
+					<td class="tilde">～</td>
+					<td><input class="form-control" type="text" th:field="*{grosstonnageTo}" /></td>
+					<td></td>
+					<td><input class="form-control" type="text" th:field="*{imono}" /></td>
+				</tr>
+				<tr>
+					<th colspan="3" th:text="#{label.builddate}"></th>
+					<td></td>
+					<th th:text="#{label.Fshipno}"></th>
+				</tr>
+				<tr>
+					<td><input class="form-control" type="date" max="9999-12-31" id="builddateFrom" th:field="*{builddateFrom}" />
+					</td>
+					<td hidden="true"><input type="hidden" name="fromCheck" id="fromCheck" value="false" /></td>
+					<td class="tilde">～</td>
+					<td><input class="form-control" type="date" max="9999-12-31" id="builddateTo" th:field="*{builddateTo}" /></td>
+					<td hidden="true"><input type="hidden" name="toCheck" id="toCheck" value="false" /></td>
+					<td></td>
+					<td><input class="form-control" type="text" th:field="*{fShipno}" /></td>
+					<td></td>
+					<th:block th:if="${shipSearchForm.logicalDelete != true}">
+						<th style="text-align: center;"><input class="form-check-input" type="checkbox"
+								th:text="#{label.logicaldeleteflag}" name="logicalDelete" id="logicalDelete" /></th>
+					</th:block>
+					<th:block th:if="${shipSearchForm.logicalDelete == true}">
+						<th style="text-align: center;"><input class="form-check-input" type="checkbox"
+								th:text="#{label.logicaldeleteflag}" name="logicalDelete" id="logicalDelete" checked />
+						</th>
+					</th:block>
+					<td></td>
+					<th:block th:if="${shipSearchForm.ownerchangekbn != '1'}">
+						<th style="text-align: center;"><input class="form-check-input" type="checkbox"
+								th:text="#{label.ownerchangeflag}" name="ownerchangekbn" id="ownerchangekbn"
+								value="1" />
+						</th>
+					</th:block>
+					<th:block th:if="${shipSearchForm.ownerchangekbn == '1'}">
+						<th style="text-align: center;"><input class="form-check-input" type="checkbox"
+								th:text="#{label.ownerchangeflag}" name="ownerchangekbn" id="ownerchangekbn" value="1"
+								checked /></th>
+					</th:block>
+				</tr>
+			</table>
+
+			<div class="searchbtndiv">
+				<button type="submit" class="btn btn-primary searchbtn btn-icon" onclick="search()">
+					<i class="bi bi-search"></i>[[#{button.search}]]
+				</button>
+			</div>
+		</form>
+
+		<!-- 検索結果 -->
+		<div class="table-responsive">
+			<table class="resulttbl">
+				<tr>
+					<th th:text="#{thead.status}"></th>
+					<th th:text="#{thead.itemmigration}"></th>
+					<th th:text="#{thead.equipment}"></th>
+					<th th:text="#{thead.Fshipno}"></th>
+					<th th:text="#{thead.shipyard}"></th>
+					<th th:text="#{thead.shipnumber}"></th>
+					<th th:text="#{thead.series}"></th>
+					<th th:text="#{thead.customer}"></th>
+					<th th:text="#{thead.shipname}"></th>
+					<th th:text="#{thead.shipnameen}"></th>
+					<th th:text="#{thead.salesjurisdiction}"></th>
+					<th th:text="#{thead.shipspeciesseaweb}"></th>
+					<th th:text="#{thead.shipspecies}"></th>
+					<th th:text="#{thead.shipclass}"></th>
+					<th th:text="#{thead.imono}"></th>
+					<th th:text="#{thead.upduser}"></th>
+					<th th:text="#{thead.upddatetime}"></th>
+				</tr>
+				<tr th:each="ship : ${shipList}">
+					<td th:text="${ship.status}" class="status" style="color: red;"></td>
+					<td class="itemMigrationIcon">
+						<a th:href="|@{/Item/ItemMigration/index/__${ship.fShipno}__}|">
+							<i class="bi bi-box-seam"></i>
+						</a>
+					</td>
+					<td class="equipmentIcon">
+						<a th:href="|@{/Equipment/EquipmentList/index/__${ship.fShipno}__}|">
+							<i class="bi bi-tools"></i>
+						</a>
+					</td>
+					<td>
+						<a th:href="|@{/Ship/ShipMaintenance/index/__${ship.fShipno}__}|">[[${ship.fShipno}]]</a>
+					</td>
+					<td class="indention">[[${ship.shipyardnamejp}]]</td>
+					<td class="indention">[[${ship.shipnumber}]]</td>
+					<td class="indention">[[${ship.series}]]</td>
+					<td class="indention">[[${ship.customernamejp}]]</td>
+					<td class="indention">[[${ship.shipnamejp}]]</td>
+					<td class="indention">[[${ship.shipnameen}]]</td>
+					<td class="indention">[[${ship.furunorescompany}]]</td>
+					<td class="indention">[[${ship.shipspeciesnamejpSeaweb}]]</td>
+					<td class="indention">[[${ship.shipspeciesnamejp}]]</td>
+					<td class="indention">[[${ship.shipclass}]]</td>
+					<td class="indention">[[${ship.imono}]]</td>
+					<td class="indention">[[${ship.updUser}]]</td>
+					<td class="indention">[[${ship.updDate}]]</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+	<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+	<script th:inline="javascript">
+		// 絞り込み機能
+		$(function () {
+			const shipyard = /*[[${shipyardStrList}]]*/"shipyardStrList";
+
+			$('#shipyardSuggest').autocomplete({
+				source: shipyard,
+				autoFocus: true,
+				delay: 0,
+				minLength: 1,
+				response: (event, ui) => {
+					if (ui.content.length > 20) {
+						ui.content.splice(20, ui.content.length);
+					}
+				}
+			});
+		});
+
+		$(function () {
+			const customer = /*[[${customerStrList}]]*/"customerStrList";
+
+			$('#customerSuggest').autocomplete({
+				source: customer,
+				autoFocus: true,
+				delay: 0,
+				minLength: 1,
+				response: (event, ui) => {
+					if (ui.content.length > 20) {
+						ui.content.splice(20, ui.content.length);
+					}
+				}
+			});
+		});
+
+		$(function () {
+			const shipspecies = /*[[${shipspeciesStrList}]]*/"shipspeciesStrList";
+
+			$('#shipspeciesSuggest').autocomplete({
+				source: shipspecies,
+				autoFocus: true,
+				delay: 0,
+				minLength: 1,
+				response: (event, ui) => {
+					if (ui.content.length > 20) {
+						ui.content.splice(20, ui.content.length);
+					}
+				}
+			});
+		});
+
+		$(function () {
+			const country = /*[[${countryStrList}]]*/"countryStrList";
+
+			$('#countrySuggest').autocomplete({
+				source: country,
+				autoFocus: true,
+				delay: 0,
+				minLength: 1,
+				response: (event, ui) => {
+					if (ui.content.length > 20) {
+						ui.content.splice(20, ui.content.length);
+					}
+				}
+			});
+		});
+
+		$(function () {
+			const managementoffice = /*[[${customerStrList}]]*/"customerStrList";
+
+			$('#managementofficeSuggest').autocomplete({
+				source: managementoffice,
+				autoFocus: true,
+				delay: 0,
+				minLength: 1,
+				response: (event, ui) => {
+					if (ui.content.length > 20) {
+						ui.content.splice(20, ui.content.length);
+					}
+				}
+			});
+		});
+
+		$(function () {
+			const shipclass = /*[[${shipclassStrList}]]*/"shipclassStrList";
+
+			$('#shipclassSuggest').autocomplete({
+				source: shipclass,
+				autoFocus: true,
+				delay: 0,
+				minLength: 1,
+				response: (event, ui) => {
+					if (ui.content.length > 20) {
+						ui.content.splice(20, ui.content.length);
+					}
+				}
+			});
+		});
+
+		// 検索ボタンを押下
+		function search() {
+			// チェックボックス非選択時の挙動
+			let logicalDelete = document.getElementById("logicalDelete");
+
+			if (!logicalDelete.checked) {
+				logicalDelete.setAttribute("name", "delete");
+				let input = document.createElement("input");
+				input.setAttribute("name", "logicalDelete");
+				input.value = false;
+				input.hidden = true;
+				document.forms["searchForm"].appendChild(input);
+			}
+
+			let ownerchangekbn = document.getElementById("ownerchangekbn");
+
+			if (!ownerchangekbn.checked) {
+				ownerchangekbn.setAttribute("name", "kbn");
+				let input = document.createElement("input");
+				input.setAttribute("name", "ownerchangekbn");
+				input.value = "";
+				input.hidden = true;
+				document.forms["searchForm"].appendChild(input);
+			}
+
+			let builddateFrom = document.getElementById("builddateFrom");
+			if (builddateFrom.value == "") {
+				document.getElementById("fromCheck").value = false;
+
+			} else {
+				document.getElementById("fromCheck").value = true;
+			}
+
+			let builddateTo = document.getElementById("builddateTo");
+			if (builddateTo.value == "") {
+				document.getElementById("toCheck").value = false;
+
+			} else {
+				document.getElementById("toCheck").value = true;
+			}
+		}
+
+		// 折り返し表示機能
+		$(function () {
+			const searchTableTdList = document.querySelectorAll(".resulttbl td.indention");
+
+			searchTableTdList.forEach((td) => {
+				// tdタグの中の文字を取得
+				let text = td.innerText;
+
+				// 25文字ごとにbrタグを挿入
+				let newText = "";
+				for (let i = 0; i < text.length; i += 25) {
+					newText += text.substr(i, 25) + "<br>";
+				}
+
+				// tdタグ内に新しい文字列を出力
+				td.innerHTML = newText;
+			});
+		});
+	</script>
+</body>
+
+</html>
