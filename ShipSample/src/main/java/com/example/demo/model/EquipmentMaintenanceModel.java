@@ -1,4 +1,4 @@
-package com.example.demo.Equipment.EquipmentMaintenance.model;
+package com.example.demo.model;
 
 public class EquipmentMaintenanceModel {
 

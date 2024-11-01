@@ -1,4 +1,4 @@
-package com.example.demo.Ship.ShipMaintenance.model;
+package com.example.demo.model;
 
 public class ShipMaintenanceModel {
 
