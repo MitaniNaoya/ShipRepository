@@ -1,1 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.Ship.ShipSearch.mapper.ShipSearchMapper">
+<select id="getShipSearch" resultType="com.example.demo.model.ShipSearchModel">
+select
+    T1.Status              as status
+    ,T1.F_ShipNo           as fShipNo
+    ,T2.ShipyardNameJP     as shipyardNameJP
+    ,T1.ShipNumber         as shipNumber
+    ,T1.Series             as series
+    ,T3.CustomerNameJP     as customerNameJP
+    ,T1.ShipNameJP         as shipNameJp
+    ,T1.ShipNameEN         as shipNameEn
+    ,T1.ShipSpecies_SeaWeb as shipSpeciesSeaWeb
+    ,T4.ShipSpeciesNameJP  as shipSpeciesNameJP
+    ,T1.ShipClass          as shipClass
+    ,T1.IMONo              as imoNo
+    ,T1.upd_user           as updUser
+    ,T1.upd_date           as updDate
+from SHP_SPM_SC_Ship T1
+left outer join SHP_SPM_SC_Shipyard T2
+    on T1.ShipyardCode = T2.ShipyardCode
+left outer join SHP_SPM_SC_Customer T3
+    on T1.ShipyardCode = T3.CustomerCode
+left outer join SHP_SPM_SC_ShipSpecies T4
+    on T1.ShipSpecies = T4.ShipSpecies
+where
+	(T2.ShipyardCode = #{shipyardCdorNm} 
+	    or T2.ShipyardNameJP = #{shipyardCdorNm})
+	and T1.F_ShipNo = #{shipNumber}
+	and T1.CustomerCode = #{customerCode}
+	and T1.Series = #{series}
+	and T2.ShipyardNameJP LIKE concat('%' , #{shipyardNameJP} , '%')
+	and T1.ManagementOfficeCode = #{managementOfficeCode}
+	and T1.ShipSpecies = #{shipSpecies}
+	and T1.ShipClass = #{shipClass}
+	and T1.ShipType = #{shipType}
+	and (#{grossTonnageFrom} <![CDATA[ <= ]]> T1.GrossTonnage
+	    and T1.GrossTonnage <![CDATA[ <= ]]> #{grossTonnageTo})
+	and T1.IMONo = #{imoNo}
+	and (#{buildDateFrom} <![CDATA[ <= ]]> BuildDate
+	and BuildDate <![CDATA[ <= ]]> #{buildDateTo})
+	and T1.F_ShipNo = #{fShipNo}
+<if test = "status = '0'">
+	and T1.Status != '0'
+</if>
+<if test = "ownerChangeKbn = '1'">
+	and T1.OwnerChangeKbn = '1'
+</if>
+
+</select>
+
+<update id="deleteShipMaintenance">
+update 
+    SHP_SPM_SC_Ship
+set
+    Status = '1'
+where
+    F_ShipNo = #{fshipno}
+</update>
+</mapper>
+

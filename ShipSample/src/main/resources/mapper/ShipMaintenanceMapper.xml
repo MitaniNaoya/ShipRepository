@@ -1,1 +1,121 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.Ship.ShipMaintenance.mapper.ShipMaintenanceMapper">
+<select id="getShipMaintenance" resultType="com.example.demo.model.ShipMaintenanceModel">
+select
+    T1.F_ShipNo                      as fShipNo
+    ,T1.Status                       as status
+    ,T1.ProjectNo                    as projectNo
+    ,T1.SMSKeyNo                     as smsKeyNo
+    ,T1.TorishinNo                   as torishinNo
+    ,T1.Remarks                      as remarks
+    ,T1.IMONo                        as imoNo
+    ,T1.ShipStatus                   as shipStatus
+    ,T1.ShipType                     as shipType
+    ,T7.ShipyardNameJP               as shipyardNameJP
+    ,T1.ShipyardNameEN               as shipyardNameEN
+    ,T1.ShipNumber                   as shipNumber
+    ,T1.ShipNameJP                   as shipNameJP
+    ,T1.Series                       as series
+    ,T1.ShipNameEN                   as shipNameEN
+    ,T1.ShipNameEN2                  as shipNameEN2
+    ,T2.ShipSpeciesNameJP            as shipSpeciesNameJP
+    ,T1.ShipSpecies_SeaWeb           as shipSpeciesSeaWeb
+    ,T3.ShipClass                    as shipClass
+    ,T1.ShipClassF                   as shipClassF
+    ,T1.ShipClassM                   as shipClassM
+    ,T8.CountryCode                  as countryCode
+    ,T1.GrossTonnage                 as grossTonnage
+    ,T1.BuildDate                    as buildDate
+    ,T1.RegistrationNo               as registrationNo
+    ,T1.FishingRegistrationNo        as fishingRegistrationNo
+    ,T1.LicenseNo                    as licenseNo
+    ,T1.TEU                          as teu
+    ,T1.MainPowerSupply              as mainPowerSupply
+    ,T1.CustomerCode                 as customerCode
+    ,T1.ManagementOfficeCode         as managementOfficeCode
+    ,T1.ContactCode                  as contactCode
+    ,T1.GroupCode                    as groupCode
+    ,T1.FurunoResCompany             as furunoResCompany
+    ,T1.GroupBeneficialOwner         as groupBeneficialOwner
+    ,T1.upd_date                     as updDate
+    ,T1.GroupBeneficialOwner_BK      as groupBeneficialOwnerBK
+    ,T1.ShipManager                  as shipManager
+    ,T1.ShipManager_BK               as shipManagerBK
+    ,T1.RegisteredOwner              as registeredOwner
+    ,T1.RegisteredOwner_BK           as registeredOwnerBK
+    ,T1.DOCCompany                   as docCompany
+    ,T1.DOCCompany_BK                as docCompanyBK
+    ,T1.TechnicalManager             as technicalManager
+    ,T1.TechnicalManager_BK          as technicalManagerBK
+    ,T1.Operator                     as operator
+    ,T1.Operator_BK                  as operatorBK
+    ,T1.OwnerCustomer_Manual         as ownerCustomerManual
+    ,T1.OwnerCustomer_LastUpd_date   as ownerCustomerLastUpdDate
+    ,T1.OwnerCustomer_Manual_BK      as ownerCustomerManualBK
+    ,T1.OwnerManagement_Manual       as ownerManagementManual
+    ,T1.OwnerManagement_LastUpd_date as ownerManagementLastUpdDate
+    ,T1.OwnerManagement_Manual_BK    as ownerManagementManualBK
+    --船主／管理会社-船主
+    --船主／管理会社-管理会社
+    --フルノ管理会社-船主
+    --フルノ管理会社-管理会社
+    /* 使用しない想定
+    ,T4.DeliveryDate                 as deliveryDate
+    ,T4.ShipyardWarrantyDate         as shipyardWarrantyDate
+    ,T4.AllWarrantyDate              as allWarrantyDate
+    ,T5.MMSI                         as mmsi
+    ,T5.CallSign                     as callSign
+    ,T5.InmarsatTEL                  as inmarsatTEL
+    ,T5.InmarsatTEL2                 as inmarsatTEL2
+    ,T5.InmarsatFAX                  as inmarsatFAX
+    ,T5.InmarsatFAX2                 as inmarsatFAX2
+    ,T5.InmarsatEmail                as inmarsatEmail
+    ,T5.InmarsatEmail2               as inmarsatEmail2
+    ,T5.InmarsatCTEL                 as inmarsatCTEL
+    ,T5.InmarsatCTEL2                as inmarsatCTEL2
+    ,T5.InmarsatCFAX                 as inmarsatCFAX
+    ,T5.InmarsatCFAX2                as inmarsatCFAX2
+    ,T5.InmarsatCEmail               as inmarsatCEmail
+    ,T5.InmarsatCEmail2              as inmarsatCEmail2
+    ,T5.ShipTEL                      as shipTEL
+    ,T5.ShipTEL2                     as shipTEL2
+    ,T6.RMSCode                      as rmsCode
+    */
+from SHP_SPM_SC_Ship T1
+left outer join SHP_SPM_SC_ShipSpecies T2
+    on T1.ShipSpecies = T2.ShipSpecies
+left outer join SHP_SPM_SC_ShipClass T3
+    on T1.ShipClass = T3.ShipClass
+left outer join SHP_SPM_SC_ShipWarranty T4
+on T1.F_ShipNo = T4.F_ShipNo
+left outer join SHP_SPM_SC_ShipIncidental T5
+    on T1.F_ShipNo = T5.F_ShipNo
+left outer join SHP_SPM_SC_ShipRMS T6
+    on T1.IMONo = T6.IMONo
+left outer join SHP_SPM_SC_Shipyard T7
+    on T1.ShipyardCode = T7.ShipyardCode
+left outer join SHP_SPM_SC_Country T8
+    on T1.ShipNationality = T8.CountryCode
+where 
+    1 = 1
+<if test="fshipno != null">
+    and T1.F_ShipNo = #{fshipno}
+</if>
+</select>
+
+<insert id="insertShipMaintenance">
+
+</insert>
+
+<update id="deleteShipMaintenance">
+update 
+    SHP_SPM_SC_Ship
+set 
+    Status = '1'
+where
+    F_ShipNo = #{fshipno}
+</update>
+</mapper>
+

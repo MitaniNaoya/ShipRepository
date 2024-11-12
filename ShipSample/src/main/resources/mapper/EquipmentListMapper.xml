@@ -1,1 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.Equipment.EquipmentList.mapper.EquipmentListMapper">
+<select id="getEquipmentList" resultType="com.example.demo.model.EquipmentListModel">
+select
+    T1.F_ShipNo              as fShipNo
+    ,T1.IMONo                as imoNo
+    ,T1.ShipType             as shipType
+    ,T1.ShipyardCode         as shipyardCode
+    ,T9.ShipyardNameJP       as shipyardNameJP
+    ,T1.ShipNumber           as shipNumber
+    ,T1.ShipNameJP           as shipNameJP
+    ,T1.Series               as series
+    ,T1.ShipSpecies          as shipSpecies
+    ,T5.ShipSpeciesNameJP    as shipSpeciesNameJP
+    ,T1.ShipClass            as shipClass
+    ,T1.ShipNationality      as shipNationality
+    ,T6.CountryNameJP        as countryNameJP
+    ,T1.GrossTonnage         as grossTonnage
+    ,T1.BuildDate            as buildDate
+    ,T1.CustomerCode         as customerCode
+    ,T7.CustomerNameJP       as customerNameJP
+    ,T2.Status               as status
+    ,T2.ModelCode            as modelCode
+    ,T8.ModelNameJP          as modelNameJP
+    ,T3.IdentificationNameJP as identificationNameJP
+    ,T2.IdentificationName   as identificationName
+    ,T4.MachineNum           as machineNum
+    ,T2.ShippingDate         as shippingDate
+    ,T2.EquipmentDate        as equipmentDate
+    ,T2.SalesJurisdict       as salesJurisdict
+    ,T2.ShipyardWarrantyDate as shipyardWarrantyDate
+    ,T2.WarrantyDate         as warrantyDate
+    ,T2.Remarks              as remarks
+from  SHP_SPM_SC_Ship T1
+left outer join SHP_SPM_SC_Equipment T2 
+    on T1.F_ShipNo = CAST(T2.EquipmentID AS varchar)
+left outer join SHP_SPM_SC_Identification T3 
+    on T2.IdentificationCode = T3.IdentificationCode
+left outer join SHP_SPM_SC_Item T4 
+    on T2.EquipmentID = T4.EquipmentID
+left outer join SHP_SPM_SC_ShipSpecies T5 
+    on T1.ShipSpecies = T5.ShipSpecies
+left outer join SHP_SPM_SC_Country T6 
+    on T1.ShipNationality = T6.CountryCode
+left outer join SHP_SPM_SC_Customer T7 
+    on T1.ShipyardCode = T7.CustomerCode
+left outer join SHP_SPM_SC_Model T8 
+    on T2.ModelCode = T8.ModelCode
+left outer join SHP_SPM_SC_Shipyard T9
+    on T1.ShipyardCode = T9.ShipyardCode
+</select>
+</mapper>
+

@@ -1,1 +1,116 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.Equipment.EquipmentMaintenance.mapper.EquipmentMaintenanceMapper">
+<select id="getUpdatedEquipmentMaintenance" resultType="com.example.demo.model.EquipmentMaintenanceModel">
+select
+    T1.F_ShipNo as fShipNo
+    ,T1.IMONo as imoNo
+    ,T1.ShipType as shipType
+    ,T1.ShipyardCode as shipyardCode
+    ,T2.ShipyardNameJP as shipyardNameJP
+    ,T1.ShipNumber as shipNumber
+    ,T1.ShipNameJP as shipNameJP
+    ,T1.Series as series
+    ,T1.ShipSpecies as shipSpecies
+    ,T3.ShipSpeciesNameJP as shipSpeciesNameJP
+    ,T1.ShipClass as shipClass
+    ,T1.ShipNationality as shipNationality
+    ,T4.CountryNameJP as countryNameJP
+    ,T1.GrossTonnage as grossTonnage
+    ,T1.BuildDate as buildDate
+    ,T1.CustomerCode as customerCode
+    ,T5.CustomerNameJP as customerNameJP
+    ,T6.Status as status
+    ,T6.EquipmentID as equipmentID
+    ,T6.ModelCode as modelCode
+    ,T7.ModelNameJP as modelNameJP
+    ,T8.IdentificationNameJP as identificationNameJP
+    ,T6.IdentificationName as identificationName
+    ,T6.ShippingDate as shippingDate
+    ,T6.EquipmentDate_Fleet as equipmentDate_Fleet
+    ,T6.EquipmentDate as equipmentDate
+    ,T6.EquipmentRemoveDate as equipmentRemoveDate
+    ,T6.ShipRecycle as shipRecycle
+    ,T6.EquipmentStatusKbn as equipmentStatusKbn
+    ,T6.SalesJurisdict as salesJurisdict
+    ,T6.Remarks as remarks
+    ,T6.WarrantyDate as warrantyDate
+    ,T6.ShipyardWarrantyDate as shipyardWarrantyDate
+    ,T6.SMSKeyNo as smsKeyNo
+    ,T6.ProjectModelID as projectModelID
+    ,T6.SAPOrderNo as sapOrderNo
+    ,T6.SAPOrderLineNo as sapOrderLineNo
+    ,T10.Status as itemStatus
+    --品目
+    --品目名
+	,T10.MachineNum as machineNum
+	,T10.Quantity as quantity
+	,T10.SAPShippingNo as sapShippingNo
+	,T10.SAPShippingLineNo as sapShippingLineNo
+    ,T11.IndividualSupport as individualSupport
+    ,T11.Base as base
+    ,T11.ProgramNo as programNo
+    ,T11.Remarks as remarks
+    ,T12.PartsNameJP as partsNameJP
+    ,T12.MandatoryParts as mandatoryParts
+    ,T12.ExchangeCycle as exchangeCycle
+    ,T12.ExpectedDate as expectedDate
+from SHP_SPM_SC_Ship T1
+left outer join SHP_SPM_SC_Shipyard T2
+    on T1.ShipyardCode = T2.ShipyardCode
+left outer join SHP_SPM_SC_ShipSpecies T3
+    on T1.ShipSpecies = T3.ShipSpecies
+left outer join SHP_SPM_SC_Country T4
+    on T1.ShipNationality = T4.CountryCode
+left outer join SHP_SPM_SC_Customer T5
+    on T1.CustomerCode = T5.CustomerCode
+left outer join SHP_SPM_SC_Equipment T6
+    on T1.F_ShipNo = T6.EquipmentID
+left outer join SHP_SPM_SC_Model T7
+    on T6.EquipmentID = T7.ModelCode
+left outer join SHP_SPM_SC_Identification T8
+    on T6.IdentificationCode = T8.IdentificationCode
+-- left outer join FRX_MMT_SC_Item T9
+--     on  
+left outer join SHP_SPM_SC_Item T10
+    on  T6.EquipmentID = T9.EquipmentID
+
+left outer join SHP_SPM_SC_Program T11
+    on  T6.EquipmentID = T11. T6.EquipmentID
+left outer join SHP_SPM_SC_ConsumableParts T12
+    onT6.EquipmentID = T12.EquipmentID
+</select>
+
+<select id="getInsertedEquipmentMaintenance" resultType="com.example.demo.model.EquipmentMaintenanceModel">
+select
+    T1.F_ShipNo as fShipNo
+    ,T1.IMONo as imoNo
+    ,T1.ShipType as shipType
+    ,T1.ShipyardCode as shipyardCode
+    ,T2.ShipyardNameJP as shipyardNameJP
+    ,T1.ShipNumber as shipNumber
+    ,T1.ShipNameJP as shipNameJP
+    ,T1.Series as series
+    ,T1.ShipSpecies as shipSpecies
+    ,T3.ShipSpeciesNameJP as shipSpeciesNameJP
+    ,T1.ShipClass as shipClass
+    ,T1.ShipNationality as shipNationality
+    ,T4.CountryNameJP as countryNameJP
+    ,T1.GrossTonnage as grossTonnage
+    ,T1.BuildDate as buildDate
+    ,T1.CustomerCode as customerCode
+    ,T5.CustomerNameJP as customerNameJP
+from SHP_SPM_SC_Ship T1
+left outer join SHP_SPM_SC_Shipyard T2
+    on T1.ShipyardCode = T2.ShipyardCode
+left outer join SHP_SPM_SC_ShipSpecies T3
+    on T1.ShipSpecies = T3.ShipSpecies
+left outer join SHP_SPM_SC_Country T4
+    on T1.ShipNationality = T4.CountryCode
+left outer join SHP_SPM_SC_Customer T5
+    on T1.CustomerCode = T5.CustomerCode
+where T1.F_ShipNo = #{fShipNo}
+</select>
+</mapper>
+

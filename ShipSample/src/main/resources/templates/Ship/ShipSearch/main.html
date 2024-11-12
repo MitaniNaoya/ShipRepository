@@ -1,6 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-	th:replace="~{common/layout/template :: layout(~{::title},~{::body/content()})}">
+<!-- 
+	<html xmlns:th="http://www.thymeleaf.org"
+		th:replace="~{common/layout/template :: layout(~{::title},~{::body/content()})}">
+-->>
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
 	<title th:text="#{disp.shipsearch}"></title>
@@ -73,8 +76,9 @@
 					<th th:text="#{label.shipmanegementoffice}"></th>
 				</tr>
 				<tr>
+					
 					<td><input class="form-control" type="text" id="shipyardSuggest" th:field="*{shipyardcode}" />
-					</td>
+					</td>				
 					<td></td>
 					<td><input class="form-control" type="text" th:field="*{shipnumber}" /></td>
 					<td>　</td>

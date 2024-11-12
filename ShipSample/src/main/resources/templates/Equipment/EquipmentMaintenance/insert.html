@@ -618,6 +618,7 @@
 				let errorMessage = "";
 				let errorCount = 1;
 
+				/*
 				if (isStringSortno) {
 					errorMessage += [[#{message.w.0010}]];
 					errorCount++;
@@ -637,6 +638,7 @@
 					}
 					errorMessage += [[#{message.w.0012}]];
 				}
+				*/
 
 				window.alert(errorMessage);
 
@@ -670,7 +672,7 @@
 
 				}).done(function (data, status, jqxhr) {
 					if (data.message === "") {
-						let result = window.confirm([[#{message.q.0001}]]);
+						//let result = window.confirm([[#{message.q.0001}]]);
 						let savebtn = document.getElementById('savebtn');
 
 						// OK押下後、一度空の処理をはさんで正しくsubmitさせる
@@ -681,7 +683,7 @@
 						}
 
 					} else {
-						let result = window.confirm(data.message + [[#{message.q.0001}]]);
+						//let result = window.confirm(data.message + [[#{message.q.0001}]]);
 						let savebtn = document.getElementById('savebtn');
 
 						// OK押下後、一度空の処理をはさんで正しくsubmitさせる

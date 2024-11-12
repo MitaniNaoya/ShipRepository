@@ -605,14 +605,14 @@
 			let errorMessage = "";
 
 			if (shipYard === "" && shipNumber === "") {
-				errorMessage = [[#{message.w.0015}]];
+				//errorMessage = [[#{message.w.0015}]];
 			} else if (shipYard !== "" && shipNumber === "") {
 				const result = shipYard.includes('不明');
 				if (!result) {
-					errorMessage = [[#{message.w.0006}]];
+					//errorMessage = [[#{message.w.0006}]];
 				}
 			} else if (shipYard === "" && shipNumber !== "") {
-				errorMessage = [[#{message.w.0007}]];
+				//errorMessage = [[#{message.w.0007}]];
 			}
 
 			if (select1 != "" && select2 != "") {
@@ -620,17 +620,19 @@
 					if (errorMessage != "") {
 						errorMessage += "\n";
 					}
-					errorMessage += [[#{message.w.0016}]];
+					//errorMessage += [[#{message.w.0016}]];
 				}
 			}
 
 			if (errorMessage === "") {
+				/*
 				let result = window.confirm([[#{message.q.0001}]]);
 
 				if (result) {
 					let insertButton = document.getElementById("insert");
 					insertButton.type = "submit";
 				}
+				*/
 
 			} else {
 				window.alert(errorMessage);
