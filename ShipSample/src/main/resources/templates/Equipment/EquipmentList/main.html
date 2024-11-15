@@ -1,6 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-	th:replace="~{common/layout/template :: layout(~{::title},~{::body/content()})}">
+<!--
+	<html xmlns:th="http://www.thymeleaf.org"
+		th:replace="~{common/layout/template :: layout(~{::title},~{::body/content()})}">
+
+-->
 
 <head>
 	<title th:text="#{disp.equipmentlist}"></title>
@@ -86,7 +89,7 @@
 					<td th:text="${equipmentInfo.status}" class="status"></td>
 					<td class="equipmentIcon">
 						<a th:href="|@{/Equipment/EquipmentMaintenance/index/__${equipmentInfo.equipmentid}__}|">
-							<i class="bi bi-tools width"></i>
+							装備メンテナンス
 						</a>
 					</td>
 					<td th:text="${equipmentInfo.model}"></td>

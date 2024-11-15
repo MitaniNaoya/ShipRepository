@@ -2,7 +2,7 @@
 <!-- 
 	<html xmlns:th="http://www.thymeleaf.org"
 		th:replace="~{common/layout/template :: layout(~{::title},~{::body/content()})}">
--->>
+-->
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
@@ -150,27 +150,39 @@
 					<td></td>
 					<td><input class="form-control" type="text" th:field="*{fShipno}" /></td>
 					<td></td>
-					<th:block th:if="${shipSearchForm.logicalDelete != true}">
-						<th style="text-align: center;"><input class="form-check-input" type="checkbox"
-								th:text="#{label.logicaldeleteflag}" name="logicalDelete" id="logicalDelete" /></th>
-					</th:block>
-					<th:block th:if="${shipSearchForm.logicalDelete == true}">
-						<th style="text-align: center;"><input class="form-check-input" type="checkbox"
-								th:text="#{label.logicaldeleteflag}" name="logicalDelete" id="logicalDelete" checked />
+					<th:block th:if="${shipSearchForm.logicalDelete != 1}">
+						<th style="text-align: center;">
+							<input class="form-check-input" type="checkbox"
+								th:text="#{label.logicaldeleteflag}" name="logicalDelete" id="logicalDelete" value=1 />
+							<input class="form-check-input" type="hidden" 
+								name="logicalDelete" id="logicalDeleteHidden" value=0 />
 						</th>
 					</th:block>
+					<th:block th:if="${shipSearchForm.logicalDelete == 1}">
+						<th style="text-align: center;">
+							<input class="form-check-input" type="checkbox"
+								th:text="#{label.logicaldeleteflag}" name="logicalDelete" id="logicalDelete" value=1 checked />
+							<input class="form-check-input" type="hidden" 
+								 name="logicalDelete" id="logicalDeleteHidden" value=0 />
+						</th>
+					</th:block>	
 					<td></td>
-					<th:block th:if="${shipSearchForm.ownerchangekbn != '1'}">
-						<th style="text-align: center;"><input class="form-check-input" type="checkbox"
-								th:text="#{label.ownerchangeflag}" name="ownerchangekbn" id="ownerchangekbn"
-								value="1" />
+					<th:block th:if="${shipSearchForm.ownerchangekbn != 1}">
+						<th style="text-align: center;">
+							<input class="form-check-input" type="checkbox"
+								th:text="#{label.ownerchangeflag}" name="ownerchangekbn" id="ownerchangekbn" value=1 />
+							<input class="form-check-input" type="hidden"
+								name="ownerchangekbn" id="ownerchangekbnhidden" value=0 />
 						</th>
 					</th:block>
-					<th:block th:if="${shipSearchForm.ownerchangekbn == '1'}">
-						<th style="text-align: center;"><input class="form-check-input" type="checkbox"
-								th:text="#{label.ownerchangeflag}" name="ownerchangekbn" id="ownerchangekbn" value="1"
-								checked /></th>
-					</th:block>
+					<th:block th:if="${shipSearchForm.ownerchangekbn == 1}">
+						<th style="text-align: center;">
+							<input class="form-check-input" type="checkbox"
+								th:text="#{label.ownerchangeflag}" name="ownerchangekbn" id="ownerchangekbn" value=1 checked />
+							<input class="form-check-input" type="hidden"
+								name="ownerchangekbn" id="ownerchangekbnhidden" value=0 />
+						</th>
+					</th:block>			
 				</tr>
 			</table>
 
@@ -186,7 +198,10 @@
 			<table class="resulttbl">
 				<tr>
 					<th th:text="#{thead.status}"></th>
-					<th th:text="#{thead.itemmigration}"></th>
+					<!--
+						<th th:text="#{thead.itemmigration}"></th>
+					-->
+					
 					<th th:text="#{thead.equipment}"></th>
 					<th th:text="#{thead.Fshipno}"></th>
 					<th th:text="#{thead.shipyard}"></th>
@@ -205,14 +220,20 @@
 				</tr>
 				<tr th:each="ship : ${shipList}">
 					<td th:text="${ship.status}" class="status" style="color: red;"></td>
-					<td class="itemMigrationIcon">
-						<a th:href="|@{/Item/ItemMigration/index/__${ship.fShipno}__}|">
-							<i class="bi bi-box-seam"></i>
-						</a>
-					</td>
+					<!--
+						<td class="itemMigrationIcon">
+							<a th:href="|@{/Item/ItemMigration/index/__${ship.fShipno}__}|">
+								<i class="bi bi-box-seam"></i>
+							</a>
+						</td>
+					-->
 					<td class="equipmentIcon">
 						<a th:href="|@{/Equipment/EquipmentList/index/__${ship.fShipno}__}|">
-							<i class="bi bi-tools"></i>
+							<!--
+								<i class="bi bi-tools"></i>
+							-->
+							装備リンク
+							
 						</a>
 					</td>
 					<td>
@@ -347,7 +368,7 @@
 				input.setAttribute("name", "logicalDelete");
 				input.value = false;
 				input.hidden = true;
-				document.forms["searchForm"].appendChild(input);
+				//document.forms["searchForm"].appendChild(input);
 			}
 
 			let ownerchangekbn = document.getElementById("ownerchangekbn");
@@ -358,10 +379,10 @@
 				input.setAttribute("name", "ownerchangekbn");
 				input.value = "";
 				input.hidden = true;
-				document.forms["searchForm"].appendChild(input);
+				//document.forms["searchForm"].appendChild(input);
 			}
 
-			let builddateFrom = document.getElementById("builddateFrom");
+			let builddateFrom = document.getElementById("buildDateFrom");
 			if (builddateFrom.value == "") {
 				document.getElementById("fromCheck").value = false;
 
@@ -369,7 +390,7 @@
 				document.getElementById("fromCheck").value = true;
 			}
 
-			let builddateTo = document.getElementById("builddateTo");
+			let builddateTo = document.getElementById("buildDateTo");
 			if (builddateTo.value == "") {
 				document.getElementById("toCheck").value = false;
 
