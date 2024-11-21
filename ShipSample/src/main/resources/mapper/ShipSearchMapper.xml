@@ -36,7 +36,7 @@ where
 	    or T2.ShipyardNameJP = #{shipyardcode})
 </if>
 <if test = "shipnumber != ''">
-	and T1.F_ShipNo = #{shipnumber}
+	and T1.ShipNumber = #{shipnumber}
 </if>
 <if test = "customercode != ''">
 	and T1.CustomerCode = #{customercode}

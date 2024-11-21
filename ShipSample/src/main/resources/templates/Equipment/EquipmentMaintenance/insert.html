@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-	th:replace="~{common/layout/template :: layout(~{::title},~{::body/content()})}">
+<!--
+	<html xmlns:th="http://www.thymeleaf.org"
+		th:replace="~{common/layout/template :: layout(~{::title},~{::body/content()})}">
 
+-->
 <head>
 	<title th:text="#{disp.equipmentupdate}"></title>
 </head>
@@ -662,6 +664,7 @@
 				let contextPath = /*[[ @{/} ]]*/ '';
 
 				// 品目、機番の重複チェック
+				/*
 				$.ajax({
 					url: contextPath + 'duplicationCheck',
 					method: 'post',
@@ -696,6 +699,11 @@
 
 				}).fail(function (data, status, jqxhr) {
 				});
+				*/
+				let savebtn = document.getElementById('savebtn');
+				savebtn.type = "submit";
+				savebtn.onclick = submit;
+				savebtn.click();
 			}
 		}
 

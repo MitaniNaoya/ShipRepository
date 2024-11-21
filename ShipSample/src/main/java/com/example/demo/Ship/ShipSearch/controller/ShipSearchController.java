@@ -18,8 +18,8 @@ import com.example.demo.model.ShipSearchModel;
 
 
 @Controller
-@SessionAttributes(types=ShipSearchForm.class)
 @RequestMapping("/Ship/ShipSearch")
+@SessionAttributes("shipSearchForm")
 public class ShipSearchController {
 	@Autowired
 	private ShipSearchService shipSearchService;
@@ -27,18 +27,44 @@ public class ShipSearchController {
 	@Autowired
 	private ModelMapper modelmapper;
 	
+	@ModelAttribute("shipSearchForm")
+	public ShipSearchForm setUpShipSearchForm(){
+	 return new ShipSearchForm();
+	}
+	
     @PostMapping("/index")
     private String doPost(ShipSearchForm shipSearchForm, Model model) {
+    	ShipSearchForm form = model.getAttribute("shipSearchForm") != null
+    			? (ShipSearchForm)  model.getAttribute("shipSearchForm")
+    			: shipSearchForm;
+    	 
     	shipSearchForm.preparreDBSearchData();
     	List<ShipSearchModel> shipList = shipSearchService.getShipSearch(shipSearchForm);
     	
     	shipSearchForm = modelmapper.map(shipList, ShipSearchForm.class);
     	model.addAttribute("shipList", shipList);
+    	model.addAttribute("shipSearchForm", form);
         return "/Ship/ShipSearch/main";
     }
     
     @GetMapping("/index")
     private String doGet(@ModelAttribute("shipSearchForm") ShipSearchForm searchForm,Model model) {
+    	model.addAttribute("shipSearchForm", new ShipSearchForm());
+        return "/Ship/ShipSearch/main";
+    }
+    
+    @GetMapping("/redirect")
+    private String doRedirect(ShipSearchForm shipSearchForm,Model model) {
+    	ShipSearchForm form = model.getAttribute("shipSearchForm") != null
+    			? (ShipSearchForm)  model.getAttribute("shipSearchForm")
+    			: shipSearchForm;
+    	 
+    	shipSearchForm.preparreDBSearchData();
+    	List<ShipSearchModel> shipList = shipSearchService.getShipSearch(shipSearchForm);
+    	
+    	shipSearchForm = modelmapper.map(shipList, ShipSearchForm.class);
+    	model.addAttribute("shipList", shipList);
+    	model.addAttribute("shipSearchForm", form);
         return "/Ship/ShipSearch/main";
     }
 }

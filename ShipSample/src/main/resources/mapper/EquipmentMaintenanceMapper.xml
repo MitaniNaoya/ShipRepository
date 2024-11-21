@@ -2,60 +2,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.demo.Equipment.EquipmentMaintenance.mapper.EquipmentMaintenanceMapper">
-<select id="getUpdatedEquipmentMaintenance" resultType="com.example.demo.model.EquipmentMaintenanceModel">
+<select id="getShipInfoByEquipmentId" resultType="com.example.demo.model.ShipInfo">
 select
-    T1.F_ShipNo as fShipNo
-    ,T1.IMONo as imoNo
-    ,T1.ShipType as shipType
-    ,T1.ShipyardCode as shipyardCode
-    ,T2.ShipyardNameJP as shipyardNameJP
-    ,T1.ShipNumber as shipNumber
+    T1.F_ShipNo as fShipno
+    ,T1.IMONo as imono
+    ,T1.ShipNumber as shipnumber
+    ,T1.ShipType as shiptype
+    ,concat(T1.ShipNationality, T4.CountryNameJP) as shipnationality
+    ,concat(T1.ShipSpecies, T3.ShipSpeciesNameJP) as shipspecies
     ,T1.ShipNameJP as shipNameJP
     ,T1.Series as series
-    ,T1.ShipSpecies as shipSpecies
-    ,T3.ShipSpeciesNameJP as shipSpeciesNameJP
-    ,T1.ShipClass as shipClass
-    ,T1.ShipNationality as shipNationality
-    ,T4.CountryNameJP as countryNameJP
     ,T1.GrossTonnage as grossTonnage
+    ,T1.ShipClass as shipClass
+    ,concat(T1.ShipyardCode,T2.ShipyardNameJP)    as shipyard
     ,T1.BuildDate as buildDate
-    ,T1.CustomerCode as customerCode
-    ,T5.CustomerNameJP as customerNameJP
-    ,T6.Status as status
-    ,T6.EquipmentID as equipmentID
-    ,T6.ModelCode as modelCode
-    ,T7.ModelNameJP as modelNameJP
-    ,T8.IdentificationNameJP as identificationNameJP
-    ,T6.IdentificationName as identificationName
-    ,T6.ShippingDate as shippingDate
-    ,T6.EquipmentDate_Fleet as equipmentDate_Fleet
-    ,T6.EquipmentDate as equipmentDate
-    ,T6.EquipmentRemoveDate as equipmentRemoveDate
-    ,T6.ShipRecycle as shipRecycle
-    ,T6.EquipmentStatusKbn as equipmentStatusKbn
-    ,T6.SalesJurisdict as salesJurisdict
-    ,T6.Remarks as remarks
-    ,T6.WarrantyDate as warrantyDate
-    ,T6.ShipyardWarrantyDate as shipyardWarrantyDate
-    ,T6.SMSKeyNo as smsKeyNo
-    ,T6.ProjectModelID as projectModelID
-    ,T6.SAPOrderNo as sapOrderNo
-    ,T6.SAPOrderLineNo as sapOrderLineNo
-    ,T10.Status as itemStatus
-    --品目
-    --品目名
-	,T10.MachineNum as machineNum
-	,T10.Quantity as quantity
-	,T10.SAPShippingNo as sapShippingNo
-	,T10.SAPShippingLineNo as sapShippingLineNo
-    ,T11.IndividualSupport as individualSupport
-    ,T11.Base as base
-    ,T11.ProgramNo as programNo
-    ,T11.Remarks as remarks
-    ,T12.PartsNameJP as partsNameJP
-    ,T12.MandatoryParts as mandatoryParts
-    ,T12.ExchangeCycle as exchangeCycle
-    ,T12.ExpectedDate as expectedDate
+    ,concat(T1.CustomerCode,T5.CustomerNameJP)    as customer
 from SHP_SPM_SC_Ship T1
 left outer join SHP_SPM_SC_Shipyard T2
     on T1.ShipyardCode = T2.ShipyardCode
@@ -66,41 +27,25 @@ left outer join SHP_SPM_SC_Country T4
 left outer join SHP_SPM_SC_Customer T5
     on T1.CustomerCode = T5.CustomerCode
 left outer join SHP_SPM_SC_Equipment T6
-    on T1.F_ShipNo = T6.EquipmentID
-left outer join SHP_SPM_SC_Model T7
-    on T6.EquipmentID = T7.ModelCode
-left outer join SHP_SPM_SC_Identification T8
-    on T6.IdentificationCode = T8.IdentificationCode
--- left outer join FRX_MMT_SC_Item T9
---     on  
-left outer join SHP_SPM_SC_Item T10
-    on  T6.EquipmentID = T9.EquipmentID
-
-left outer join SHP_SPM_SC_Program T11
-    on  T6.EquipmentID = T11. T6.EquipmentID
-left outer join SHP_SPM_SC_ConsumableParts T12
-    onT6.EquipmentID = T12.EquipmentID
+    on T1.F_ShipNo = T6.F_ShipNo
+where
+    T6.EquipmentID = #{equipmentid};
 </select>
-
-<select id="getInsertedEquipmentMaintenance" resultType="com.example.demo.model.EquipmentMaintenanceModel">
+<select id="getShipInfoByFShipNo" resultType="com.example.demo.model.ShipInfo">
 select
-    T1.F_ShipNo as fShipNo
-    ,T1.IMONo as imoNo
-    ,T1.ShipType as shipType
-    ,T1.ShipyardCode as shipyardCode
-    ,T2.ShipyardNameJP as shipyardNameJP
+    T1.F_ShipNo as fShipno
+    ,T1.IMONo as imono
     ,T1.ShipNumber as shipNumber
+    ,T1.ShipType as shipType
+    ,concat(T1.ShipNationality, T4.CountryNameJP) as shipnationality
+    ,concat(T1.ShipSpecies, T3.ShipSpeciesNameJP) as shipspecies        
     ,T1.ShipNameJP as shipNameJP
     ,T1.Series as series
-    ,T1.ShipSpecies as shipSpecies
-    ,T3.ShipSpeciesNameJP as shipSpeciesNameJP
-    ,T1.ShipClass as shipClass
-    ,T1.ShipNationality as shipNationality
-    ,T4.CountryNameJP as countryNameJP
     ,T1.GrossTonnage as grossTonnage
+    ,T1.ShipClass as shipClass
+    ,concat(T1.ShipyardCode,T2.ShipyardNameJP)    as shipyard
     ,T1.BuildDate as buildDate
-    ,T1.CustomerCode as customerCode
-    ,T5.CustomerNameJP as customerNameJP
+    ,concat(T1.CustomerCode,T5.CustomerNameJP)    as customer
 from SHP_SPM_SC_Ship T1
 left outer join SHP_SPM_SC_Shipyard T2
     on T1.ShipyardCode = T2.ShipyardCode
@@ -110,7 +55,335 @@ left outer join SHP_SPM_SC_Country T4
     on T1.ShipNationality = T4.CountryCode
 left outer join SHP_SPM_SC_Customer T5
     on T1.CustomerCode = T5.CustomerCode
-where T1.F_ShipNo = #{fShipNo}
+where T1.F_ShipNo = #{fshipno}
 </select>
+<select id="getEquipmentInfo" resultType="com.example.demo.model.EquipmentInfo">
+select
+	T1.Status                                as status
+    ,T1.EquipmentID                          as equipmentid
+    ,concat(T1.ModelCode,':',T2.ModelNameJP) as model
+    ,T3.IdentificationNameJP                 as identificationcode
+    ,T1.IdentificationName                   as identificationname
+    ,T1.ShippingDate                         as shippingdate
+    ,T1.EquipmentDate_Fleet                  as equipmentdateFleet
+    ,T1.EquipmentDate                        as equipmentdate
+    ,T1.EquipmentRemoveDate                  as equipmentremovedate
+    ,T1.ShipRecycle                          as shiprecycle
+    ,T1.EquipmentStatusKbn                   as equipmentstatuskbn
+    ,T1.SalesJurisdict                       as salesjurisdict
+    ,T1.Remarks                              as remarks
+    ,T1.WarrantyDate                         as warrantydate
+    ,T1.ShipyardWarrantyDate                 as shipyardwarrantydate
+    ,T1.SMSKeyNo                             as smskeyno
+    ,T1.ProjectModelID                       as projectmodelid
+    ,T1.SAPOrderNo                           as saporderno
+    ,T1.SAPOrderLineNo                       as saporderlineno
+from SHP_SPM_SC_Equipment T1
+left outer join SHP_SPM_SC_Model T2
+    on T1.ModelCode = T2.ModelCode
+left outer join SHP_SPM_SC_Identification T3
+    on T1.IdentificationCode = T3.IdentificationCode
+where
+    T1.EquipmentID = #{equipmentid};
+</select>
+
+<select id="getItemInfoList" resultType="com.example.demo.model.ItemInfo">
+select
+    T2.SortNo             as sortno
+    ,T2.Status            as iStatus
+    --品目                as item
+    --品目名              as itemTxtJ
+	,T2.MachineNum        as iMachinenum
+	,T2.Quantity          as quantity
+	,T2.SAPShippingNo     as sapshippingno
+	,T2.SAPShippingLineNo as sapshippinglineno
+	,T1.SAPOrderNo        as iSaporderno
+	,T1.SAPOrderLineNo    as iSaporderlineno
+from SHP_SPM_SC_Equipment T1
+left outer join SHP_SPM_SC_Item T2
+    on  T1.EquipmentID = T2.EquipmentID
+where
+    T1.EquipmentID = #{equipmentid};
+</select>
+<select id="getProgramInfoList" resultType="com.example.demo.model.ProgramInfo">
+select
+    T2.IndividualSupport as individualsupport
+    ,T2.Base             as base
+    ,T2.ProgramNo        as programno
+    ,T2.Remarks          as pRemarks
+from SHP_SPM_SC_Equipment T1
+left outer join SHP_SPM_SC_Program T2
+    on  T1.EquipmentID = T2.EquipmentID
+where
+    T1.EquipmentID = #{equipmentid};
+</select>
+<select id="getConsumablePartsInfoList" resultType="com.example.demo.model.ConsumablePartsInfo">
+select
+    T2.PartsNameJP     as partsnamejp
+    ,T2.MandatoryParts as mandatoryparts
+    ,T2.ExchangeCycle  as exchangecycle
+    ,T2.ExpectedDate   as expecteddate
+from SHP_SPM_SC_Equipment T1
+left outer join SHP_SPM_SC_ConsumableParts T2
+    on T1.EquipmentID = T2.EquipmentID
+where
+    T1.EquipmentID = #{equipmentid};
+</select>
+
+<resultMap type="com.example.demo.model.EquipmentMaintenanceModel" id="equipmentMaintenance">
+	<id column="fShipno"/>
+	<association property="shipInfo" resultMap="shipInfo" />
+	<association property="equipmentInfo" resultMap="equipmentInfo" />
+	<collection property="itemInfoList" resultMap="itemInfoList" />
+	<collection property="programInfoList" resultMap="programInfoList" />
+	<collection property="consumablePartsInfoList" resultMap="consumablePartsInfoList" />
+</resultMap>
+<resultMap type="com.example.demo.model.ShipInfo" id="shipInfo">
+	<id column="fShipno" property="fShipno"/>
+	<result column="imono" property="imono"/>
+	<result column="shipnumber" property="shipnumber"/>
+	<result column="shiptype" property="shiptype"/>
+	<result column="shipnationality" property="shipnationality"/>
+	<result column="shipspecies" property="shipspecies"/>
+	<result column="shipnamejp" property="shipnamejp"/>
+	<result column="series" property="series"/>
+	<result column="grosstonnage" property="grosstonnage"/>
+	<result column="shipclass" property="shipclass"/>
+	<result column="shipyard" property="shipyard"/>
+	<result column="builddate" property="builddate"/>
+	<result column="customer" property="customer"/>
+</resultMap>
+<resultMap type="com.example.demo.model.EquipmentInfo" id="equipmentInfo">
+	<id column="equipmentid" property="equipmentid"/>
+	<result column="status" property="status"/>
+	<result column="model" property="model"/>
+	<result column="identification" property="identification"/>
+	<result column="identificationcode" property="identificationcode"/>
+	<result column="identificationname" property="identificationname"/>
+	<result column="machinenum" property="machinenum"/>
+	<result column="shippingdate" property="shippingdate"/>
+	<result column="equipmentdateFleet" property="equipmentdateFleet"/>
+	<result column="equipmentdate" property="equipmentdate"/>
+	<result column="equipmentremovedate" property="equipmentremovedate"/>
+	<result column="shiprecycle" property="shiprecycle"/>
+	<result column="equipmentstatuskbn" property="equipmentstatuskbn"/>
+	<result column="salesjurisdict" property="salesjurisdict"/>
+	<result column="shipyardwarrantydate" property="shipyardwarrantydate"/>
+	<result column="warrantydate" property="warrantydate"/>
+	<result column="remarks" property="remarks"/>
+	<result column="smskeyno" property="smskeyno"/>
+	<result column="projectmodelid" property="projectmodelid"/>
+	<result column="saporderno" property="saporderno"/>
+	<result column="saporderlineno" property="saporderlineno"/>
+</resultMap>
+<resultMap type="com.example.demo.model.ItemInfo" id="itemInfoList">
+	<result column="iRowno" property="iRowno"/>
+	<result column="sortno" property="sortno"/>
+	<result column="iStatus" property="iStatus"/>
+	<result column="item" property="item"/>
+	<result column="itemTxtJ" property="itemTxtJ"/>
+	<result column="iMachinenum" property="iMachinenum"/>
+	<result column="quantity" property="quantity"/>
+	<result column="sapshippingno" property="sapshippingno"/>
+	<result column="sapshippinglineno" property="sapshippinglineno"/>
+	<result column="iSaporderno" property="iSaporderno"/>
+<result column="iSaporderlineno" property="iSaporderlineno"/>
+</resultMap>
+<resultMap type="com.example.demo.model.ProgramInfo" id="programInfoList">
+	<id column="pRowno" property="pRowno"/>
+	<result column="individualsupport" property="individualsupport"/>
+	<result column="base" property="base"/>
+	<result column="programno" property="programno"/>
+	<result column="pRemarks" property="pRemarks"/>
+</resultMap>
+<resultMap type="com.example.demo.model.ConsumablePartsInfo" id="consumablePartsInfoList">
+	<id column="cRowno" property="cRowno"/>
+	<result column="partsnamejp" property="partsnamejp"/>
+	<result column="mandatoryparts" property="mandatoryparts"/>
+	<result column="exchangecycle" property="exchangecycle"/>
+	<result column="expecteddate" property="expecteddate"/>
+</resultMap>
+<select id="getEquipmentMaintenanceModel" resultMap="equipmentMaintenance">
+select
+    T1.F_ShipNo                                   as fShipno
+    ,T1.IMONo                                     as imono
+    ,T1.ShipNumber                                as shipnumber
+    ,T1.ShipType                                  as shiptype
+    ,concat(T1.ShipNationality, T4.CountryNameJP) as shipnationality
+    ,concat(T1.ShipSpecies, T3.ShipSpeciesNameJP) as shipspecies
+    ,T1.ShipNameJP                                as shipNameJP
+    ,T1.Series                                    as series
+    ,T1.GrossTonnage                              as grossTonnage
+    ,T1.ShipClass                                 as shipClass
+    ,concat(T1.ShipyardCode,T2.ShipyardNameJP)    as shipyard
+    ,T1.BuildDate                                 as buildDate
+    ,concat(T1.CustomerCode,T5.CustomerNameJP)    as customer
+    ,T6.Status                                    as status
+    ,T6.EquipmentID                               as equipmentid
+    ,concat(T6.ModelCode,':',T7.ModelNameJP)      as model
+    ,T8.IdentificationNameJP                      as identificationcode
+    ,T6.IdentificationName                        as identificationname
+    ,T6.ShippingDate                              as shippingdate
+    ,T6.EquipmentDate_Fleet                       as equipmentdateFleet
+    ,T6.EquipmentDate                             as equipmentdate
+    ,T6.EquipmentRemoveDate                       as equipmentremovedate
+    ,T6.ShipRecycle                               as shiprecycle
+    ,T6.EquipmentStatusKbn                        as equipmentstatuskbn
+    ,T6.SalesJurisdict                            as salesjurisdict
+    ,T6.Remarks                                   as remarks
+    ,T6.WarrantyDate                              as warrantydate
+    ,T6.ShipyardWarrantyDate                      as shipyardwarrantydate
+    ,T6.SMSKeyNo                                  as smskeyno
+    ,T6.ProjectModelID                            as projectmodelid
+    ,T6.SAPOrderNo                                as saporderno
+    ,T6.SAPOrderLineNo                            as saporderlineno
+    ,T9.RowNo                                     as iRowno
+    ,T9.SortNo                                    as sortno
+    ,T9.Status                                    as iStatus
+    --品目                                        as item
+    --品目名                                      as itemTxtJ
+	,T9.MachineNum                                as iMachinenum
+	,T9.Quantity                                  as quantity
+	,T9.SAPShippingNo                             as sapshippingno
+	,T9.SAPShippingLineNo                         as sapshippinglineno
+	,T6.SAPOrderNo                                as iSaporderno
+	,T6.SAPOrderLineNo                            as iSaporderlineno
+	,T11.RowNo                                    as pRowno
+    ,T11.IndividualSupport                        as individualsupport
+    ,T11.Base                                     as base
+    ,T11.ProgramNo                                as programno
+    ,T11.Remarks                                  as pRemarks
+    ,T12.RowNo                                    as cRowno
+    ,T12.PartsNameJP                              as partsnamejp
+    ,T12.MandatoryParts                           as mandatoryparts
+    ,T12.ExchangeCycle                            as exchangecycle
+    ,T12.ExpectedDate                             as expecteddate
+from SHP_SPM_SC_Ship T1
+left outer join SHP_SPM_SC_Shipyard T2
+    on T1.ShipyardCode = T2.ShipyardCode
+left outer join SHP_SPM_SC_ShipSpecies T3
+    on T1.ShipSpecies = T3.ShipSpecies
+left outer join SHP_SPM_SC_Country T4
+    on T1.ShipNationality = T4.CountryCode
+left outer join SHP_SPM_SC_Customer T5
+    on T1.CustomerCode = T5.CustomerCode
+left outer join SHP_SPM_SC_Equipment T6
+    on T1.F_ShipNo = T6.F_ShipNo
+left outer join SHP_SPM_SC_Model T7
+    on T6.ModelCode = T7.ModelCode
+left outer join SHP_SPM_SC_Identification T8
+    on T6.IdentificationCode = T8.IdentificationCode
+left outer join SHP_SPM_SC_Item T9
+    on  T6.EquipmentID = T9.EquipmentID
+left outer join SHP_SPM_SC_Program T11
+    on  T6.EquipmentID = T11.EquipmentID
+left outer join SHP_SPM_SC_ConsumableParts T12
+    on T6.EquipmentID = T12.EquipmentID
+where
+    T6.EquipmentID = #{equipmentid}
+</select>
+
+<select id="getNewestEquipmentID" resultType="int">
+select
+   max(EquipmentID) as newestEqupipmentID    
+from SHP_SPM_SC_Equipment
+</select>
+
+<insert id="insertEquipmentInfo" parameterType="com.example.demo.model.EquipmentInfo">
+insert into SHP_SPM_SC_Equipment ( 
+      EquipmentID,
+      ModelCode,
+      IdentificationCode,
+      IdentificationName,
+      ShippingDate,
+      EquipmentDate_Fleet,
+      EquipmentDate,
+      EquipmentRemoveDate,
+      ShipRecycle,
+      Status,
+      SalesJurisdict,
+      Remarks,
+      WarrantyDate,
+      ShipyardWarrantyDate
+) values(
+      #{equipmentid,jdbcType=INTEGER},
+      #{model,jdbcType=VARCHAR},
+      #{identificationcode,jdbcType=VARCHAR},
+      #{identificationname,jdbcType=VARCHAR},
+      #{shippingdate,jdbcType=DATE},
+      #{equipmentdateFleet,jdbcType=DATE},
+      #{equipmentdate,jdbcType=DATE},
+      #{equipmentremovedate,jdbcType=DATE},
+      #{shiprecycle,jdbcType=VARCHAR},
+      #{equipmentstatuskbn,jdbcType=VARCHAR},
+      #{salesjurisdict,jdbcType=VARCHAR},
+      #{remarks,jdbcType=VARCHAR},
+      #{warrantydate,jdbcType=DATE},
+      #{shipyardwarrantydate,jdbcType=DATE}
+)
+</insert>
+<insert id="insertBulkItemInfoList" parameterType="java.util.List">
+insert into SHP_SPM_SC_Item (
+    EquipmentID,
+    RowNo,
+    Status,
+    SortNo,
+    MachineNum,
+    Quantity
+) values
+<foreach collection="itemInfoList" item="itemInfo" separator=","> 
+(
+    #{itemInfo.equipmentid,jdbcType=INTEGER},
+    #{itemInfo.iRowno,jdbcType=INTEGER},
+    #{itemInfo.iStatus,jdbcType=VARCHAR},
+    #{itemInfo.sortno,jdbcType=INTEGER},
+    #{itemInfo.iMachinenum,jdbcType=VARCHAR},
+    #{itemInfo.quantity,jdbcType=INTEGER}
+)
+</foreach>
+</insert>
+
+<insert id="insertBulkProgramInfoList" parameterType="java.util.List">
+insert into SHP_SPM_SC_Program (
+    EquipmentID,
+    RowNo,
+    IndividualSupport,
+    Base,
+    ProgramNo,
+    Remarks
+) values
+<foreach collection="programInfoList" item="programInfo" separator=","> 
+(
+    #{programInfo.equipmentid,jdbcType=INTEGER},
+    #{programInfo.pRowno,jdbcType=INTEGER},
+    #{programInfo.individualsupport,jdbcType=VARCHAR},
+    #{programInfo.base,jdbcType=VARCHAR},
+    #{programInfo.programno,jdbcType=VARCHAR},
+    #{programInfo.pRemarks,jdbcType=VARCHAR}
+)
+</foreach>
+</insert>
+
+<insert id="insertBulkConsumablePartsInfoList" parameterType="java.util.List">
+insert into SHP_SPM_SC_ConsumableParts (
+    EquipmentID,
+    RowNo,
+    PartsNameJP,
+    MandatoryParts,
+    ExchangeCycle,
+    ExpectedDate
+)values
+<foreach collection="consumablePartsInfoList" item="consumablePartsInfo" separator=","> 
+(
+    #{consumablePartsInfo.equipmentid,jdbcType=INTEGER},
+    #{consumablePartsInfo.cRowno,jdbcType=INTEGER},
+    #{consumablePartsInfo.partsnamejp,jdbcType=VARCHAR},
+    #{consumablePartsInfo.mandatoryparts,jdbcType=INTEGER},
+    #{consumablePartsInfo.exchangecycle,jdbcType=INTEGER},
+    #{consumablePartsInfo.expecteddate,jdbcType=DATE}
+)
+</foreach>
+</insert>
+
 </mapper>
 

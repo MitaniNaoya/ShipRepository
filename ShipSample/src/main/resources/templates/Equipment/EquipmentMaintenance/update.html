@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-	th:replace="~{common/layout/template :: layout(~{::title},~{::body/content()})}">
-
+<!--
+	<html xmlns:th="http://www.thymeleaf.org"
+		th:replace="~{common/layout/template :: layout(~{::title},~{::body/content()})}">
+-->
 <head>
 	<title th:text="#{disp.equipmentupdate}"></title>
 </head>
@@ -862,47 +863,6 @@
 			let returnbtn = document.getElementById('returnbtn');
 			returnbtn.type = "submit";
 		}
-
-		// 識別リストの初期表示
-		$(function () {
-			let data = {model: $('#modelSuggest').val()};
-
-			// コンテキストパスの取得
-			let contextPath = /*[[ @{/} ]]*/ '';
-
-			$.ajax({
-				url: contextPath + 'model',
-				method: 'post',
-				data: JSON.stringify(data),
-				contentType: 'application/json',
-				dataType: "json",
-				cache: false
-
-			}).done(function (data, status, jqxhr) {
-				let select = $('#selectIdentification');
-				let selectedOption = $('#selectIdentification option:selected').val();
-
-				// セレクトボックスを初期化
-				select.children().remove();
-				let initOption = $('<option>')
-					.text("")
-					.val("");
-				select.append(initOption);
-
-				// セレクトボックスに追加
-				data.forEach(function (value) {
-					let option = $('<option>')
-						.text(value.identificationnamejp)
-						.val(value.identificationcode);
-					select.append(option);
-				});
-
-				$('#selectIdentification option[value=\'' + selectedOption + '\']').prop('selected', true);
-
-			}).fail(function (data, status, jqxhr) {
-				alert('送信エラー');
-			});
-		});
 
 		// 機種入力
 		function modelChange(obj) {

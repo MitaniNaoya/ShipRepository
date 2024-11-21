@@ -198,10 +198,7 @@
 			<table class="resulttbl">
 				<tr>
 					<th th:text="#{thead.status}"></th>
-					<!--
-						<th th:text="#{thead.itemmigration}"></th>
-					-->
-					
+					<th th:text="#{thead.itemmigration}"></th>
 					<th th:text="#{thead.equipment}"></th>
 					<th th:text="#{thead.Fshipno}"></th>
 					<th th:text="#{thead.shipyard}"></th>
@@ -220,13 +217,12 @@
 				</tr>
 				<tr th:each="ship : ${shipList}">
 					<td th:text="${ship.status}" class="status" style="color: red;"></td>
-					<!--
-						<td class="itemMigrationIcon">
-							<a th:href="|@{/Item/ItemMigration/index/__${ship.fShipno}__}|">
-								<i class="bi bi-box-seam"></i>
-							</a>
-						</td>
-					-->
+					<td class="itemMigrationIcon">
+						<a href="">
+							<i class="bi bi-box-seam"></i>
+							品目移動
+						</a>
+					</td>
 					<td class="equipmentIcon">
 						<a th:href="|@{/Equipment/EquipmentList/index/__${ship.fShipno}__}|">
 							<!--

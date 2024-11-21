@@ -2,10 +2,13 @@ package com.example.demo.model;
 
 import java.util.List;
 
+import lombok.Data;
+
+@Data
 public class EquipmentListModel {
 	// 船情報
-	public ShipInfo shipInfo;
+	private ShipInfo shipInfo;
 	
 	// 機種情報
-	public List<EquipmentInfo> equipmentInfo;
+	private List<EquipmentInfo> equipmentInfoList;
 }
