@@ -9,7 +9,7 @@
 </head>
 
 <body>
-
+	<div id="errorAlert" style="display:none;">[[${errorMessageList}]]</div>
 	<div class="container">
 
 		<h1 class="title" th:text="#{disp.equipmentregister}"></h1>
@@ -725,6 +725,7 @@
 			let contextPath = /*[[ @{/} ]]*/ '';
 
 			// DBに無ければ入力した文字を削除
+			/*
 			$.ajax({
 				url: contextPath + 'modelCertify',
 				method: 'post',
@@ -739,7 +740,9 @@
 				}
 			}).fail(function (data, status, jqxhr) {
 			});
+			*/
 
+			/*
 			// 識別リスト作成
 			$.ajax({
 				url: contextPath + 'model',
@@ -769,6 +772,7 @@
 
 			}).fail(function (data, status, jqxhr) {
 			});
+			*/
 		}
 
 		// 品目入力で品目テキスト取得
@@ -780,7 +784,7 @@
 
 			// コンテキストパスの取得
 			let contextPath = /*[[ @{/} ]]*/ '';
-
+			/*
 			$.ajax({
 				url: contextPath + 'item',
 				method: 'post',
@@ -796,7 +800,17 @@
 			}).fail(function (data, status, jqxhr) {
 				obj.value = "";
 			});
+			*/
 		}
+		document.addEventListener("DOMContentLoaded", (event) => {
+			const error = $('#errorAlert').text();
+			if (error.length > 2) {
+				const errorMessage = error.slice(1, -1).split(',').join('\n');
+				setTimeout(function () {
+				        window.alert(errorMessage);
+				}, 100)
+			}
+		});
 	</script>
 </body>
 

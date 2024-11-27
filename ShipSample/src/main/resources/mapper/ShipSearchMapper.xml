@@ -63,19 +63,19 @@ where
 	and T1.ShipType = #{shiptype}
 </if>
 <if test = "grosstonnageFrom != ''">
-    and #{grossTonnageFromByInt} <![CDATA[ <= ]]> T1.GrossTonnage
+    and cast(#{grosstonnageFrom} as numeric ) <![CDATA[ <= ]]> T1.GrossTonnage
 </if>
 <if test = "grosstonnageTo != ''">
-    and T1.GrossTonnage <![CDATA[ <= ]]> #{grossTonnageToByInt}
+    and T1.GrossTonnage <![CDATA[ <= ]]>cast(#{grosstonnageTo} as numeric )
 </if>
 <if test = "imono != ''">
     and T1.IMONo = #{imono}
 </if>
 <if test = "builddateFrom != ''">
-    and #{buildDateFromByDate} <![CDATA[ <= ]]> T1.BuildDate
+    and cast(#{builddateFrom} as date ) <![CDATA[ <= ]]> T1.BuildDate
 </if>
 <if test = "builddateTo != ''">
-    and T1.BuildDate <![CDATA[ <= ]]> #{buildDateToByDate}
+    and T1.BuildDate <![CDATA[ <= ]]> cast(#{builddateTo} as date )
 </if>
 <if test = "fShipno != ''">
 	and T1.F_ShipNo = #{fShipno}

@@ -33,7 +33,10 @@ where
 <select id="getEquipmentList" resultType="com.example.demo.model.EquipmentInfo">
 select
     T1.EquipmentID                                                as equipmentid 
-    ,T1.Status                                                    as status
+    ,case
+        when T1.Status = '1' then '削除'
+        else ''
+    end                                                           as status
     ,concat(T1.ModelCode, T4.ModelNameJP)                         as model
     ,concat(T2.IdentificationNameJP, ' ', T1.IdentificationName)  as identification
     ,T3.MachineNum                                                as machinenum
@@ -50,94 +53,6 @@ left outer join SHP_SPM_SC_Item T3
     on T1.EquipmentID = T3.EquipmentID
 left outer join SHP_SPM_SC_Model T4 
     on T1.ModelCode = T4.ModelCode
-where
-    T1.F_ShipNo = #{fshipno}
-</select>
-
-<resultMap type="com.example.demo.model.EquipmentListModel" id="equipmentList">
-	<id column="fShipno"/>
-	<association property="shipInfo" javaType="com.example.demo.model.ShipInfo">
-		<id column="fShipno" property="fShipno"/>
-		<result column="imono" property="imono"/>
-		<result column="shipnumber" property="shipnumber"/>
-		<result column="shiptype" property="shiptype"/>
-		<result column="shipnationality" property="shipnationality"/>
-		<result column="shipspecies" property="shipspecies"/>
-		<result column="shipnamejp" property="shipnamejp"/>
-		<result column="series" property="series"/>
-		<result column="grosstonnage" property="grosstonnage"/>
-		<result column="shipclass" property="shipclass"/>
-		<result column="shipyard" property="shipyard"/>
-		<result column="builddate" property="builddate"/>
-		<result column="customer" property="customer"/>
-	</association>
-	<collection property="equipmentInfoList" ofType="com.example.demo.model.EquipmentInfo">
-		<result column="equipmentid" property="equipmentid"/>
-		<result column="status" property="status"/>
-		<result column="model" property="model"/>
-		<result column="identification" property="identification"/>
-		<result column="identificationcode" property="identificationcode"/>
-		<result column="identificationname" property="identificationname"/>
-		<result column="machinenum" property="machinenum"/>
-		<result column="shippingdate" property="shippingdate"/>
-		<result column="equipmentdateFleet" property="equipmentdateFleet"/>
-		<result column="equipmentdate" property="equipmentdate"/>
-		<result column="equipmentremovedate" property="equipmentremovedate"/>
-		<result column="shiprecycle" property="shiprecycle"/>
-		<result column="equipmentstatuskbn" property="equipmentstatuskbn"/>
-		<result column="salesjurisdict" property="salesjurisdict"/>
-		<result column="shipyardwarrantydate" property="shipyardwarrantydate"/>
-		<result column="warrantydate" property="warrantydate"/>
-		<result column="remarks" property="remarks"/>
-		<result column="smskeyno" property="smskeyno"/>
-		<result column="projectmodelid" property="projectmodelid"/>
-		<result column="saporderno" property="saporderno"/>
-		<result column="saporderlineno" property="saporderlineno"/>
-	</collection>
-</resultMap>
-<select id="getEquipmentListModel" resultMap="equipmentList">
-select
-    T1.F_ShipNo                                   as fShipno
-    ,T1.IMONo                                     as imono
-    ,T1.ShipNumber                                as shipnumber
-    ,T1.ShipType                                  as shiptype
-    ,concat(T1.ShipNationality, T3.CountryNameJP) as shipnationality
-    ,concat(T1.ShipSpecies, T2.ShipSpeciesNameJP) as shipspecies
-    ,T1.ShipNameJP                                as shipnamejp
-    ,T1.Series                                    as series
-    ,T1.GrossTonnage                              as grosstonnage
-    ,T1.ShipClass                                 as shipclass
-    ,concat(T1.ShipyardCode,T5.ShipyardNameJP)    as shipyard
-    ,T1.BuildDate                                 as builddate
-    ,concat(T1.CustomerCode,T4.CustomerNameJP)    as customer
-    ,T6.EquipmentID                                               as equipmentid 
-    ,T6.Status                                                    as status
-    ,concat(T6.ModelCode, T9.ModelNameJP)                         as model
-    ,concat(T7.IdentificationNameJP, ' ', T6.IdentificationName)  as identification
-    ,T8.MachineNum                                                as machinenum
-    ,T6.ShippingDate                                              as shippingdate
-    ,T6.EquipmentDate                                             as equipmentdate
-    ,T6.SalesJurisdict                                            as salesjurisdict
-    ,T6.ShipyardWarrantyDate                                      as shipyardwarrantydate
-    ,T6.WarrantyDate                                              as warrantydate
-    ,T6.Remarks                                                   as remarks
-from  SHP_SPM_SC_Ship T1
-left outer join SHP_SPM_SC_ShipSpecies T2 
-    on T1.ShipSpecies = T2.ShipSpecies
-left outer join SHP_SPM_SC_Country T3 
-    on T1.ShipNationality = T3.CountryCode
-left outer join SHP_SPM_SC_Customer T4 
-    on T1.ShipyardCode = T4.CustomerCode
-left outer join SHP_SPM_SC_Shipyard T5
-    on T1.ShipyardCode = T5.ShipyardCode
-left outer join SHP_SPM_SC_Equipment T6 
-    on T1.F_ShipNo = T6.F_ShipNo
-left outer join SHP_SPM_SC_Identification T7 
-    on T6.IdentificationCode = T7.IdentificationCode
-left outer join SHP_SPM_SC_Item T8 
-    on T6.EquipmentID = T8.EquipmentID
-left outer join SHP_SPM_SC_Model T9 
-    on T6.ModelCode = T9.ModelCode
 where
     T1.F_ShipNo = #{fshipno}
 </select>

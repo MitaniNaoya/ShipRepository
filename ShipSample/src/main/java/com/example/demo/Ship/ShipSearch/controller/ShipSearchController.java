@@ -38,7 +38,6 @@ public class ShipSearchController {
     			? (ShipSearchForm)  model.getAttribute("shipSearchForm")
     			: shipSearchForm;
     	 
-    	shipSearchForm.preparreDBSearchData();
     	List<ShipSearchModel> shipList = shipSearchService.getShipSearch(shipSearchForm);
     	
     	shipSearchForm = modelmapper.map(shipList, ShipSearchForm.class);
@@ -53,17 +52,11 @@ public class ShipSearchController {
         return "/Ship/ShipSearch/main";
     }
     
-    @GetMapping("/redirect")
-    private String doRedirect(ShipSearchForm shipSearchForm,Model model) {
+    @GetMapping("/research")
+    private String doResearch(ShipSearchForm shipSearchForm,Model model) {
     	ShipSearchForm form = model.getAttribute("shipSearchForm") != null
     			? (ShipSearchForm)  model.getAttribute("shipSearchForm")
     			: shipSearchForm;
-    	 
-    	shipSearchForm.preparreDBSearchData();
-    	List<ShipSearchModel> shipList = shipSearchService.getShipSearch(shipSearchForm);
-    	
-    	shipSearchForm = modelmapper.map(shipList, ShipSearchForm.class);
-    	model.addAttribute("shipList", shipList);
     	model.addAttribute("shipSearchForm", form);
         return "/Ship/ShipSearch/main";
     }

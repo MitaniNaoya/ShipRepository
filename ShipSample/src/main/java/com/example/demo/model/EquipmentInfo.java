@@ -7,8 +7,9 @@ import lombok.Data;
 @Data
 // 装備情報
 public class EquipmentInfo {
-	private String status;                      // ステータス
 	private Integer equipmentid;                // 装備ID
+	private String fshipno;                     // F-ShipNo
+	private String status;                      // ステータス
 	private String model;                       // 機種
 	private String identification;              // 識別
 	private String identificationcode;          // 識別コード
@@ -28,4 +29,5 @@ public class EquipmentInfo {
 	private String projectmodelid;              // 案件機種ID
 	private String saporderno;                  // 受注伝票番号
 	private String saporderlineno;              // 受注伝票明細番号
+
 }
