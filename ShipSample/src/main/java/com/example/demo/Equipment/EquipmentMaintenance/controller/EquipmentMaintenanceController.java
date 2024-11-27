@@ -89,7 +89,7 @@ public class EquipmentMaintenanceController {
         	model.addAttribute("modelStrList", chkValidatedList(this.equipmentMaintenanceModel.getModelStrList())? this.equipmentMaintenanceModel.getModelStrList(): new ArrayList<String>());
         	model.addAttribute("itemStrList", chkValidatedList(this.equipmentMaintenanceModel.getItemStrList())? this.equipmentMaintenanceModel.getItemStrList(): new ArrayList<String>());
         	errorMessageList.add("modelStrError");
-        	errorMessageList.add(messageSource.getMessage("message.w.0021", null, Locale.JAPAN));
+        	errorMessageList.add(messageSource.getMessage("message.w.0021", new String[] {"機種"}, Locale.JAPAN));
     	}
     	
     	List<String> itemStrList = equipmentMaintenanceService.getItemStrList();
@@ -99,7 +99,7 @@ public class EquipmentMaintenanceController {
         	model.addAttribute("shipInfo", this.equipmentMaintenanceModel.getShipInfo() != null? this.equipmentMaintenanceModel.getShipInfo() : new ShipInfo());
         	model.addAttribute("modelStrList", chkValidatedList(this.equipmentMaintenanceModel.getModelStrList())? this.equipmentMaintenanceModel.getModelStrList(): new ArrayList<String>());
         	model.addAttribute("itemStrList", chkValidatedList(this.equipmentMaintenanceModel.getItemStrList())? this.equipmentMaintenanceModel.getItemStrList(): new ArrayList<String>());
-        	errorMessageList.add(messageSource.getMessage("message.w.0022", null, Locale.JAPAN));
+        	errorMessageList.add(messageSource.getMessage("message.w.0021", new String[] {"品目"}, Locale.JAPAN));
     	}
     	
     	if (errorMessageList.size() > 0) {
@@ -157,7 +157,7 @@ public class EquipmentMaintenanceController {
         	model.addAttribute("consumablepartsInfoList", chkValidatedList(consumablePartsInfoList)? consumablePartsInfoList: new ArrayList<ConsumablePartsInfo>());
         	model.addAttribute("modelStrList", chkValidatedList(modelStrList)? modelStrList: new ArrayList<String>());
         	model.addAttribute("itemStrList", chkValidatedList(itemStrList)? itemStrList: new ArrayList<String>());
-        	errorMessageList.add(messageSource.getMessage("message.w.0021", null, Locale.JAPAN));
+        	errorMessageList.add(messageSource.getMessage("message.w.0021", new String[] {"機種"}, Locale.JAPAN));
         	
         	
     	}
@@ -173,7 +173,7 @@ public class EquipmentMaintenanceController {
         	model.addAttribute("consumablepartsInfoList", chkValidatedList(consumablePartsInfoList)? consumablePartsInfoList: new ArrayList<ConsumablePartsInfo>());
         	model.addAttribute("modelStrList", chkValidatedList(modelStrList)? modelStrList: new ArrayList<String>());
         	model.addAttribute("itemStrList", chkValidatedList(itemStrList)? itemStrList: new ArrayList<String>());
-        	errorMessageList.add(messageSource.getMessage("message.w.0022", null, Locale.JAPAN));
+        	errorMessageList.add(messageSource.getMessage("message.w.0021",new String[] {"品目"}, Locale.JAPAN));
     	}
     	
     	if (errorMessageList.size() > 0) {
@@ -229,6 +229,8 @@ public class EquipmentMaintenanceController {
 		
 		// 装備情報
 		EquipmentInfo equipmentInfo = new EquipmentInfo();
+		equipmentInfo.setFshipno(fShipno); // F-ShipNo
+		equipmentInfo.setEquipmentid(equipmentID);	//装備ID
 		if ((equipmentMaintenanceForm.getModel() != null && !equipmentMaintenanceForm.getModel().equals(""))
 				|| (equipmentMaintenanceForm.getIdentificationcode() != null && !equipmentMaintenanceForm.getIdentificationcode().equals(""))
 				|| (equipmentMaintenanceForm.getIdentificationname() != null && !equipmentMaintenanceForm.getIdentificationname().equals(""))
@@ -242,11 +244,8 @@ public class EquipmentMaintenanceController {
 				|| (equipmentMaintenanceForm.getRemarks() != null && !equipmentMaintenanceForm.getRemarks().equals(""))
 				|| (equipmentMaintenanceForm.getWarrantydate() != null && !equipmentMaintenanceForm.getWarrantydate().equals(""))
 				|| (equipmentMaintenanceForm.getShipyardwarrantydate() != null && !equipmentMaintenanceForm.getShipyardwarrantydate().equals(""))) {
-			equipmentInfo.setEquipmentid(equipmentID);	//装備ID
 			equipmentInfo.setStatus(equipmentMaintenanceForm.getStatus());	//ステータス
-			equipmentInfo.setFshipno(fShipno); // F-ShipNo
 			equipmentInfo.setModel(equipmentMaintenanceForm.getModel());	// 機種	
-			
 			equipmentInfo.setIdentificationcode(equipmentMaintenanceForm.getIdentificationcode());	// 識別コード
 			equipmentInfo.setIdentificationname(equipmentMaintenanceForm.getIdentificationname());	// 識別名
 			equipmentInfo.setShippingdate(isLocalDate(equipmentMaintenanceForm.getShippingdate())?  LocalDate.parse(equipmentMaintenanceForm.getShippingdate(), DateTimeFormatter.ofPattern("yyyy-MM-dd")): null);	// 出荷日
@@ -263,8 +262,6 @@ public class EquipmentMaintenanceController {
 			equipmentInfo.setProjectmodelid(equipmentMaintenanceForm.getProjectmodelid());	// 案件機種ID
 			equipmentInfo.setSaporderno(equipmentMaintenanceForm.getSaporderno());	// 受注伝票番号
 			equipmentInfo.setSaporderlineno(equipmentMaintenanceForm.getSaporderlineno());	// 受注伝票明細番号
-		} else {
-			equipmentInfo = null;
 		}
 		return equipmentInfo;
 	}
@@ -399,7 +396,7 @@ public class EquipmentMaintenanceController {
 	}
 	
 	private boolean chkValidatedList(List<?> list) {
-		if (list.size() > 0) {
+		if (list != null && list.size() > 0) {
 			if (!(list.size() == 1 && list.get(0) == null)) {
 				return true;
 			}

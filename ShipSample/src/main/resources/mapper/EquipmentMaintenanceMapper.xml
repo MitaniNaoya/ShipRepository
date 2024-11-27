@@ -8,15 +8,31 @@ select
     ,T1.IMONo as imono
     ,T1.ShipNumber as shipnumber
     ,T1.ShipType as shiptype
-    ,concat(T1.ShipNationality, T4.CountryNameJP) as shipnationality
-    ,concat(T1.ShipSpecies, T3.ShipSpeciesNameJP) as shipspecies
+    ,case when (T1.ShipNationality is not  null and T1.ShipNationality != '') 
+               and (T4.CountryNameJP is not  null and T4.CountryNameJP != '' )
+                   then concat(T1.ShipNationality,'：', T4.CountryNameJP)
+          else ''
+    end as shipnationality
+    ,case when (T1.ShipSpecies is not  null and T1.ShipSpecies != '') 
+               and (T3.ShipSpeciesNameJP is not  null and T3.ShipSpeciesNameJP != '' )
+                   then concat(T1.ShipSpecies ,'：', T3.ShipSpeciesNameJP)
+          else ''
+    end as shipspecies
     ,T1.ShipNameJP as shipNameJP
     ,T1.Series as series
     ,T1.GrossTonnage as grossTonnage
     ,T1.ShipClass as shipClass
-    ,concat(T1.ShipyardCode,T2.ShipyardNameJP)    as shipyard
-    ,T1.BuildDate as buildDate
-    ,concat(T1.CustomerCode,T5.CustomerNameJP)    as customer
+    ,case when (T1.ShipyardCode is not null and T1.ShipyardCode != '') 
+               and (T2.ShipyardNameJP is not  null and T2.ShipyardNameJP != '' )
+                   then concat(T1.ShipyardCode ,'：',T2.ShipyardNameJP) 
+          else ''
+    end as shipyard
+    ,T1.BuildDate as buildDate  
+    ,case when (T1.CustomerCode is not null and T1.CustomerCode != '') 
+               and (T5.CustomerNameJP is not null and T5.CustomerNameJP != '' )
+                   then concat(T1.CustomerCode ,'：',T5.CustomerNameJP) 
+          else ''
+    end  as customer
 from SHP_SPM_SC_Ship T1
 left outer join SHP_SPM_SC_Shipyard T2
     on T1.ShipyardCode = T2.ShipyardCode
@@ -38,15 +54,31 @@ select
     ,T1.IMONo as imono
     ,T1.ShipNumber as shipNumber
     ,T1.ShipType as shipType
-    ,concat(T1.ShipNationality, T4.CountryNameJP) as shipnationality
-    ,concat(T1.ShipSpecies, T3.ShipSpeciesNameJP) as shipspecies        
+    ,case when (T1.ShipNationality is not null and T1.ShipNationality != '') 
+               and (T4.CountryNameJP is not null and  T4.CountryNameJP != '' )
+                   then concat(T1.ShipNationality ,'：', T4.CountryNameJP)
+          else ''
+    end  as shipnationality
+    ,case when (T1.ShipSpecies is not null and T1.ShipSpecies != '') 
+               and (T3.ShipSpeciesNameJP is not null and  T3.ShipSpeciesNameJP != '' )
+                   then concat(T1.ShipSpecies ,'：', T3.ShipSpeciesNameJP) 
+          else ''
+    end  as shipspecies 
     ,T1.ShipNameJP as shipNameJP
     ,T1.Series as series
     ,T1.GrossTonnage as grossTonnage
     ,T1.ShipClass as shipClass
-    ,concat(T1.ShipyardCode,T2.ShipyardNameJP)    as shipyard
-    ,T1.BuildDate as buildDate
-    ,concat(T1.CustomerCode,T5.CustomerNameJP)    as customer
+    ,case when (T1.ShipyardCode is not null and T1.ShipyardCode != '') 
+               and (T2.ShipyardNameJP is not null and  T2.ShipyardNameJP != '' )
+                   then concat(T1.ShipyardCode ,'：',T2.ShipyardNameJP) 
+          else ''
+    end  as shipyard
+    ,T1.BuildDate as buildDate  
+    ,case when (T1.CustomerCode is not null and T1.CustomerCode != '') 
+               and (T5.CustomerNameJP is not null and  T5.CustomerNameJP != '' )
+                   then concat(T1.CustomerCode ,'：',T5.CustomerNameJP)  
+          else ''
+    end  as customer
 from SHP_SPM_SC_Ship T1
 left outer join SHP_SPM_SC_Shipyard T2
     on T1.ShipyardCode = T2.ShipyardCode
@@ -65,8 +97,12 @@ select
         when T1.Status = '1' then '削除'
         else ''
     end                                                   as status
-    ,T1.EquipmentID                                       as equipmentid
-    ,concat(T1.ModelCode,':',T2.ModelNameJP)              as model
+    ,T1.EquipmentID                                       as equipmentid             
+    ,case when (T1.ModelCode is not null and T1.ModelCode != '') 
+               and (T2.ModelNameJP is not null and  T2.ModelNameJP != '' )
+                   then concat(T1.ModelCode ,'：',T2.ModelNameJP) 
+          else ''
+    end  as model
     ,T3.IdentificationNameJP                              as identificationcode
     ,T1.IdentificationName                                as identificationname
     ,T1.ShippingDate                                      as shippingdate
@@ -97,8 +133,12 @@ where
 select
     T2.RowNo                                             as iRowno
     ,T2.SortNo                                            as sortno
-    ,T2.Status                                            as iStatus
-    ,concat(T3.ITEM_CODE,':',T3.TYPE_NM_J)              as item
+    ,T2.Status                                            as iStatus         
+    ,case when (T3.ITEM_CODE is not null and T3.ITEM_CODE != '') 
+               and (T3.TYPE_NM_J is not null and T3.TYPE_NM_J != '' )
+                   then concat(T3.ITEM_CODE ,'：',T3.TYPE_NM_J)  
+          else ''
+    end as item
     ,substring(T3.ITEM_TXT_J,22,length(T3.ITEM_TXT_J))  as itemTxtJ
 	,T2.MachineNum                                        as iMachinenum
 	,T2.Quantity                                          as quantity
@@ -146,14 +186,22 @@ where
 
 <select id="getModelStrList" resultType="java.lang.String">
 select
-    concat(ModelCode,':',ModelNameJP) as modelStr
+    case when (ModelCode is not null and ModelCode != '') 
+               and (ModelNameJP is not null and ModelNameJP != '' )
+                   then concat(ModelCode ,'：',ModelNameJP) 
+          else ''
+    end as modelStr
 from 
     SHP_SPM_SC_Model
 </select>
 
 <select id="getItemStrList" resultType="java.lang.String">
 select
-    concat(ITEM_CODE,':',TYPE_NM_J) as itemStr
+    case when (ITEM_CODE is not null and ITEM_CODE != '') 
+               and (TYPE_NM_J is not null and TYPE_NM_J != '' )
+                   then concat(ITEM_CODE,'：',TYPE_NM_J)
+          else ''
+    end as itemStr
 from 
     FRX_MMT_SC_Item
 </select>
@@ -244,7 +292,7 @@ insert into SHP_SPM_SC_Equipment (
       #{equipmentid,jdbcType=INTEGER},
       #{status,jdbcType=VARCHAR},
       #{fshipno,jdbcType=VARCHAR},
-      left(#{model},strpos(#{model},':') -1),
+      left(#{model},strpos(#{model},'：') -1),
       #{identificationcode,jdbcType=VARCHAR},
       #{identificationname,jdbcType=VARCHAR},
       #{shippingdate,jdbcType=DATE},
@@ -330,7 +378,7 @@ insert into SHP_SPM_SC_ConsumableParts (
  UPDATE 
      SHP_SPM_SC_Equipment
  SET 
-     ModelCode = left(#{model},strpos(#{model},':') -1)
+     ModelCode = left(#{model},strpos(#{model},'：') -1)
      ,IdentificationCode = #{identificationcode}
      ,IdentificationName = #{identificationname}
      ,ShippingDate = #{shippingdate}

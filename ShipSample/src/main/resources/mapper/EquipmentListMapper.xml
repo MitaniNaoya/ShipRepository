@@ -7,16 +7,32 @@ select
     T1.F_ShipNo                                   as fShipno
     ,T1.IMONo                                     as imono
     ,T1.ShipNumber                                as shipnumber
-    ,T1.ShipType                                  as shiptype
-    ,concat(T1.ShipNationality, T3.CountryNameJP) as shipnationality
-    ,concat(T1.ShipSpecies, T2.ShipSpeciesNameJP) as shipspecies
+    ,T1.ShipType                                  as shiptype 
+    ,case when (T1.ShipNationality is not null and T1.ShipNationality != '') 
+               and (T3.CountryNameJP is not null and T3.CountryNameJP != '' )
+                   then concat(T1.ShipNationality,'：', T3.CountryNameJP)
+          else ''
+    end as shipnationality
+    ,case when (T1.ShipSpecies is not null and T1.ShipSpecies != '') 
+               and (T2.ShipSpeciesNameJP is not null and T2.ShipSpeciesNameJP != '' )
+                   then concat(T1.ShipSpecies ,'：', T2.ShipSpeciesNameJP) 
+          else ''
+    end as shipspecies
     ,T1.ShipNameJP                                as shipnamejp
     ,T1.Series                                    as series
     ,T1.GrossTonnage                              as grosstonnage
-    ,T1.ShipClass                                 as shipclass
-    ,concat(T1.ShipyardCode,T5.ShipyardNameJP)    as shipyard
+    ,T1.ShipClass                                 as shipclass    
+    ,case when (T1.ShipyardCode is not null and T1.ShipyardCode != '') 
+               and (T5.ShipyardNameJP is not null and T5.ShipyardNameJP != '' )
+                   then concat(T1.ShipyardCode ,'：',T5.ShipyardNameJP)
+          else ''
+    end as shipyard
     ,T1.BuildDate                                 as builddate
-    ,concat(T1.CustomerCode,T4.CustomerNameJP)    as customer
+    ,case when (T1.CustomerCode is not null and T1.CustomerCode != '') 
+               and (T4.CustomerNameJP is not null and T4.CustomerNameJP != '' )
+                   then concat(T1.CustomerCode,'：',T4.CustomerNameJP)
+          else ''
+    end  as customer
 from  SHP_SPM_SC_Ship T1
 left outer join SHP_SPM_SC_ShipSpecies T2 
     on T1.ShipSpecies = T2.ShipSpecies
@@ -36,9 +52,17 @@ select
     ,case
         when T1.Status = '1' then '削除'
         else ''
-    end                                                           as status
-    ,concat(T1.ModelCode, T4.ModelNameJP)                         as model
-    ,concat(T2.IdentificationNameJP, ' ', T1.IdentificationName)  as identification
+    end                                                           as status                       
+    ,case when (T1.ModelCode is not null and T1.ModelCode != '') 
+               and (T4.ModelNameJP is not null and T4.ModelNameJP != '' )
+                   then concat(T1.ModelCode,'：', T4.ModelNameJP)  
+          else ''
+    end  as model 
+    ,case when (T2.IdentificationNameJP is not null and T2.IdentificationNameJP != '') 
+               and (T1.IdentificationName is not null and T1.IdentificationName != '' )
+                   then concat(T2.IdentificationNameJP, '：', T1.IdentificationName) 
+          else ''
+    end  as identification
     ,T3.MachineNum                                                as machinenum
     ,T1.ShippingDate                                              as shippingdate
     ,T1.EquipmentDate                                             as equipmentdate
