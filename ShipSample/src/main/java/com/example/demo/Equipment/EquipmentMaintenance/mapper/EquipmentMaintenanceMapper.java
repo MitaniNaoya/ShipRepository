@@ -5,11 +5,11 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.example.demo.Equipment.EquipmentMaintenance.form.EquipmentMaintenanceForm;
-import com.example.demo.model.ConsumablePartsInfo;
-import com.example.demo.model.EquipmentInfo;
-import com.example.demo.model.ItemInfo;
-import com.example.demo.model.ProgramInfo;
-import com.example.demo.model.ShipInfo;
+import com.example.demo.entity.ConsumablePartsInfo;
+import com.example.demo.entity.EquipmentInfo;
+import com.example.demo.entity.ItemInfo;
+import com.example.demo.entity.ProgramInfo;
+import com.example.demo.entity.ShipInfo;
 
 @Mapper
 public interface EquipmentMaintenanceMapper {

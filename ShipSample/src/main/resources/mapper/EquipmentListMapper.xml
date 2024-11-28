@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.demo.Equipment.EquipmentList.mapper.EquipmentListMapper">
-<select id="getShipInfo" resultType="com.example.demo.model.ShipInfo">
+<select id="getShipInfo" resultType="com.example.demo.entity.ShipInfo">
 select
     T1.F_ShipNo                                   as fShipno
     ,T1.IMONo                                     as imono
@@ -46,7 +46,7 @@ where
     T1.F_ShipNo = #{fshipno}
 </select>
 
-<select id="getEquipmentList" resultType="com.example.demo.model.EquipmentInfo">
+<select id="getEquipmentList" resultType="com.example.demo.entity.EquipmentInfo">
 select
     T1.EquipmentID                                                as equipmentid 
     ,case

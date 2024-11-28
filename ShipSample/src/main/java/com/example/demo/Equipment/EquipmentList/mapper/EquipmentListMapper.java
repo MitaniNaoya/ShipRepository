@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.example.demo.model.EquipmentInfo;
-import com.example.demo.model.ShipInfo;
+import com.example.demo.entity.EquipmentInfo;
+import com.example.demo.entity.ShipInfo;
 
 @Mapper
 public interface EquipmentListMapper {

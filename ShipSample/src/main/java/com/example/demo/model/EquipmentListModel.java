@@ -2,6 +2,9 @@ package com.example.demo.model;
 
 import java.util.List;
 
+import com.example.demo.entity.EquipmentInfo;
+import com.example.demo.entity.ShipInfo;
+
 import lombok.Data;
 
 @Data

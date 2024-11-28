@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.Equipment.EquipmentList.mapper.EquipmentListMapper;
-import com.example.demo.model.EquipmentInfo;
-import com.example.demo.model.ShipInfo;
+import com.example.demo.entity.EquipmentInfo;
+import com.example.demo.entity.ShipInfo;
 
 @Service
 public class EquipmentListServiceimpl implements EquipmentListService {

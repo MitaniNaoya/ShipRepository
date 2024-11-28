@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.Equipment.EquipmentMaintenance.mapper.EquipmentMaintenanceMapper">
 
-<select id="getShipInfoByEquipmentId"  resultType="com.example.demo.model.ShipInfo">
+<select id="getShipInfoByEquipmentId"  resultType="com.example.demo.entity.ShipInfo">
 select
     T1.F_ShipNo as fShipno
     ,T1.IMONo as imono
@@ -48,7 +48,7 @@ where
     T6.EquipmentID = #{equipmentid};
 </select>
 
-<select id="getShipInfoByFShipNo"  resultType="com.example.demo.model.ShipInfo">
+<select id="getShipInfoByFShipNo"  resultType="com.example.demo.entity.ShipInfo">
 select
     T1.F_ShipNo as fShipno
     ,T1.IMONo as imono
@@ -91,7 +91,7 @@ left outer join SHP_SPM_SC_Customer T5
 where T1.F_ShipNo = #{fshipno}
 </select>
 
-<select id="getEquipmentInfo"  resultType="com.example.demo.model.EquipmentInfo">
+<select id="getEquipmentInfo"  resultType="com.example.demo.entity.EquipmentInfo">
 select
     case
         when T1.Status = '1' then '削除'
@@ -129,7 +129,7 @@ where
     T1.EquipmentID = #{equipmentid}
 </select>
 
-<select id="getItemInfoList" resultType="com.example.demo.model.ItemInfo">
+<select id="getItemInfoList" resultType="com.example.demo.entity.ItemInfo">
 select
     T2.RowNo                                             as iRowno
     ,T2.SortNo                                            as sortno
@@ -156,7 +156,7 @@ where
     and T3.COUNTRY_TYPE = 'JP'
 </select>
 
-<select id="getProgramInfoList" resultType="com.example.demo.model.ProgramInfo">
+<select id="getProgramInfoList" resultType="com.example.demo.entity.ProgramInfo">
 select
 	T2.RowNo                                             as pRowno
     ,T2.IndividualSupport                                as individualsupport
@@ -170,7 +170,7 @@ where
     T1.EquipmentID = #{equipmentid}
 </select>
 
-<select id="getConsumablePartsInfoList" resultType="com.example.demo.model.ConsumablePartsInfo">
+<select id="getConsumablePartsInfoList" resultType="com.example.demo.entity.ConsumablePartsInfo">
 select
     T2.RowNo                                             as cRowno
     ,T2.PartsNameJP                                      as partsnamejp
@@ -275,7 +275,7 @@ where
 
 
 
-<insert id="insertEquipmentInfo" parameterType="com.example.demo.model.EquipmentInfo">
+<insert id="insertEquipmentInfo" parameterType="com.example.demo.entity.EquipmentInfo">
 insert into SHP_SPM_SC_Equipment ( 
       EquipmentID,
       Status,
