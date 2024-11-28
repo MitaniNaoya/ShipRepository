@@ -60,7 +60,7 @@ select
     end  as model 
     ,case when (T2.IdentificationNameJP is not null and T2.IdentificationNameJP != '') 
                and (T1.IdentificationName is not null and T1.IdentificationName != '' )
-                   then concat(T2.IdentificationNameJP, '：', T1.IdentificationName) 
+                   then concat(T2.IdentificationNameJP, ' ', T1.IdentificationName) 
           else ''
     end  as identification
     ,T3.MachineNum                                                as machinenum

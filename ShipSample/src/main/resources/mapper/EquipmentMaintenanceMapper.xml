@@ -196,14 +196,23 @@ from
 </select>
 
 <select id="getItemStrList" resultType="java.lang.String">
-select
-    case when (ITEM_CODE is not null and ITEM_CODE != '') 
+select  
+	case when (ITEM_CODE is not null and ITEM_CODE != '') 
                and (TYPE_NM_J is not null and TYPE_NM_J != '' )
                    then concat(ITEM_CODE,'：',TYPE_NM_J)
           else ''
     end as itemStr
-from 
-    FRX_MMT_SC_Item
+from (
+  select 
+  	ITEM_CODE
+	, TYPE_NM_J
+	, ROW_NUMBER() OVER (PARTITION BY ITEM_CODE ORDER BY ITEM_CODE ASC)
+  from 
+  	FRX_MMT_SC_Item
+  where
+    COUNTRY_TYPE = 'JP'
+)
+where row_number = 1
 </select>
 
 <select id="getNewestEquipmentID" resultType="int">
