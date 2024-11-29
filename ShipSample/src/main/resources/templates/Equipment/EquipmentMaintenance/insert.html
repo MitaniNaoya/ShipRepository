@@ -5,10 +5,85 @@
 
 -->
 <head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title th:text="#{disp.shipsearch}"></title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
 	<title th:text="#{disp.equipmentupdate}"></title>
 </head>
 
 <body>
+	<style>
+		.btn.btn-save.btn-icon {
+			background-color: blueviolet;
+			color: white;
+		}
+
+		.btndiv{
+			display:flex;
+			justify-content: flex-end;
+
+		}
+
+		.btndiv form{
+			display: inline-block;
+		}
+		
+		.table-responsive th,
+		.table-responsive td {
+			height: 53px;
+			padding: 7px;
+			border: 1px solid rgb(192, 192, 192);
+		}
+
+		.table-responsive th {
+			background-color: rgb(207, 244, 252);
+		}
+
+		.table-responsive table {
+			margin-top: 28px;
+			width: 100%;
+		}
+		
+		.subTable th,
+		.subTable td {
+			height: 53px;
+			padding: 7px;
+			border: 1px solid rgb(192, 192, 192);
+		}
+
+		.subTable th {
+			background-color: rgb(207, 244, 252);
+		}
+
+		.subTable {
+			margin-top: 28px;
+			width: 100%;
+		}
+		
+		.tabbtn {
+			margin-top: 28px;
+			height: 60px;
+			width: 100px;
+			background-color: rgb(207, 244, 252);
+			border: 1px solid rgb(192, 192, 192);
+			border-radius: 8px;
+		}
+		
+		#itemTable th {
+			text-align: center;
+		}
+		
+		#programTable th {
+			text-align: center;
+		}
+		
+		#consumablepartsTable th {
+			text-align: center;
+		}
+
+	</style>
 	<div id="errorAlert" style="display:none;">[[${errorMessageList}]]</div>
 	<div class="container">
 
@@ -33,19 +108,19 @@
 			<ul class="nav nav-tabs">
 				<li class="nav-item">
 					<button class="nav-link active" data-bs-toggle="tab" data-bs-target="#basicinformation"
-						type="button" th:text="#{label.basicinformation}"></button>
+						type="button" th:text="#{label.basicinformation}" onclick="tabClick(this)"></button>
 				</li>
 				<li class="nav-item">
 					<button class="nav-link" data-bs-toggle="tab" data-bs-target="#iteminformation" type="button"
-						th:text="#{label.iteminformation}"></button>
+						th:text="#{label.iteminformation}" onclick="tabClick(this)"></button>
 				</li>
 				<li class="nav-item">
 					<button class="nav-link" data-bs-toggle="tab" data-bs-target="#programinformation" type="button"
-						th:text="#{label.programinformation}"></button>
+						th:text="#{label.programinformation}" onclick="tabClick(this)"></button>
 				</li>
 				<li class="nav-item">
 					<button class="nav-link" data-bs-toggle="tab" data-bs-target="#consumablepartsinformation"
-						type="button" th:text="#{label.consumablepartsinformation}"></button>
+						type="button" th:text="#{label.consumablepartsinformation}" onclick="tabClick(this)"></button>
 				</li>
 			</ul>
 
@@ -811,6 +886,15 @@
 				}, 100)
 			}
 		});
+		
+		function tabClick(el) {
+			Array.from(document.getElementsByClassName('active')).forEach(el => {
+				el.classList.remove('active');
+			});
+			el.classList.add('active');
+			$(el.dataset.bsTarget).addClass('active');
+			
+		}
 	</script>
 </body>
 
